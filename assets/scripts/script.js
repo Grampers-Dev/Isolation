@@ -75,35 +75,43 @@ const movementKeys = new Set();
 // Initialize a boolean variable 'isShooting' to track if the gunner is shooting
 let isShooting = false;
 
+// Function to draw the gunner character on the canvas
 function drawGunner() {
+    // Save the current canvas state to prevent transformations affecting other elements
     ctx.save();
+
+    // Translate the canvas to the gunner's position and rotate it based on the gunner's angle
     ctx.translate(gunner.x, gunner.y);
     ctx.rotate(gunner.angle);
 
-    // Replace the drawing code with an image
-    const fighterJetImage = document.querySelector(".fighter-jet");
+    // Replace the drawing code with an image of the gunner (fighter jet)
+    const fighterJetImage = document.querySelector(".fighter-jet"); // Get the gunner image
     const jetWidth = 120; // Adjust the width as needed
     const jetHeight = 88; // Adjust the height as needed
+
+    // Draw the gunner image centered on the gunner's position and rotated angle
     ctx.drawImage(
         fighterJetImage,
-        -jetWidth / 2,
-        -jetHeight / 2,
-        jetWidth,
-        jetHeight
+        -jetWidth / 2,  // Center the image horizontally
+        -jetHeight / 2, // Center the image vertically
+        jetWidth,       // Width of the image
+        jetHeight       // Height of the image
     );
 
-    const healthBarWidth = 50;
-    const healthBarHeight = 2;
-    const healthBarX = -healthBarWidth / 2;
-    const healthBarY = jetHeight / 2 + 10;
-    ctx.fillStyle = "black";
+    // Draw a health bar below the gunner's image to represent their health
+    const healthBarWidth = 50; // Width of the health bar
+    const healthBarHeight = 2; // Height of the health bar
+    const healthBarX = -healthBarWidth / 2; // Center the health bar horizontally
+    const healthBarY = jetHeight / 2 + 10;  // Position the health bar below the gunner
+    ctx.fillStyle = "black"; // Set the color of the health bar
     ctx.fillRect(
-        healthBarX,
-        healthBarY,
-        healthBarWidth * (gunner.health / 100),
-        healthBarHeight
+        healthBarX,                            // X-coordinate of the health bar
+        healthBarY,                            // Y-coordinate of the health bar
+        healthBarWidth * (gunner.health / 100), // Adjust the width based on gunner's health
+        healthBarHeight                        // Height of the health bar
     );
 
+    // Restore the canvas state to revert transformations
     ctx.restore();
 }
 
