@@ -170,4 +170,10 @@ function drawTargets() {
     });
 }
 
+// Function to clear the entire canvas
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
 
