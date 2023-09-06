@@ -75,3 +75,35 @@ const movementKeys = new Set();
 // Initialize a boolean variable 'isShooting' to track if the gunner is shooting
 let isShooting = false;
 
+function drawGunner() {
+    ctx.save();
+    ctx.translate(gunner.x, gunner.y);
+    ctx.rotate(gunner.angle);
+
+    // Replace the drawing code with an image
+    const fighterJetImage = document.querySelector(".fighter-jet");
+    const jetWidth = 120; // Adjust the width as needed
+    const jetHeight = 88; // Adjust the height as needed
+    ctx.drawImage(
+        fighterJetImage,
+        -jetWidth / 2,
+        -jetHeight / 2,
+        jetWidth,
+        jetHeight
+    );
+
+    const healthBarWidth = 50;
+    const healthBarHeight = 2;
+    const healthBarX = -healthBarWidth / 2;
+    const healthBarY = jetHeight / 2 + 10;
+    ctx.fillStyle = "black";
+    ctx.fillRect(
+        healthBarX,
+        healthBarY,
+        healthBarWidth * (gunner.health / 100),
+        healthBarHeight
+    );
+
+    ctx.restore();
+}
+
