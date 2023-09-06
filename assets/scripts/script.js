@@ -142,25 +142,31 @@ function drawBullets() {
     });
 }
 
+// Function to draw targets (enemies) on the canvas
 function drawTargets() {
-    const targetImage = document.querySelector(".target-image"); // Get the target image element
-    targets.forEach((target) => {
-        ctx.save();
-        ctx.translate(target.x, target.y);
-        ctx.rotate(target.angle); // Apply rotation angle
+    // Get the target image element from the HTML document
+    const targetImage = document.querySelector(".target-image");
 
-        // Replace the drawing code with an image
-        const targetWidth = 80; // Adjust the width as needed
-        const targetHeight = 48; // Adjust the height as needed
+    // Loop through the 'targets' array and draw each target
+    targets.forEach((target) => {
+        ctx.save(); // Save the current canvas state to prevent transformations affecting other elements
+        ctx.translate(target.x, target.y); // Translate the canvas to the target's position
+        ctx.rotate(target.angle); // Apply rotation angle to the target
+
+        // Replace the drawing code with an image of the target
+        const targetWidth = 80; // Adjust the width of the target image as needed
+        const targetHeight = 48; // Adjust the height of the target image as needed
+
+        // Draw the target image centered on the target's position and rotated based on its angle
         ctx.drawImage(
-            targetImage,
-            -targetWidth / 2,
-            -targetHeight / 2,
-            targetWidth,
-            targetHeight
+            targetImage,             // The target image element
+            -targetWidth / 2,        // Center the image horizontally
+            -targetHeight / 2,       // Center the image vertically
+            targetWidth,             // Width of the image
+            targetHeight             // Height of the image
         );
 
-        ctx.restore();
+        ctx.restore(); // Restore the canvas state to revert transformations
     });
 }
 
