@@ -402,7 +402,51 @@ pauseButton.addEventListener("click", () => {
 // Event listener for the "End" button click
 endButton.addEventListener("click", () => {
     endGame(); // Call the endGame function to end the game
-});
+});// Function to start the game and initialize game elements
+function startGame() {
+    // Get references to relevant HTML elements
+    const startButton = document.querySelector(".start-button");
+    const playerNameInput = document.querySelector(".player-name");
+    const playerNameDisplay = document.querySelector(".player-name-display");
+
+    // Get the trimmed player name from the input field
+    const playerName = playerNameInput.value.trim();
+
+    // Check if a valid player name is provided (not empty)
+    if (playerName !== "") {
+        // Hide the input field and display the player's name
+        playerNameInput.style.display = "none";
+        playerNameDisplay.textContent = `Player: ${playerName}`;
+        playerNameDisplay.style.display = "inline"; // Show the name display
+
+        // Start shooting at regular intervals
+        shootingInterval = setInterval(shoot, 100);
+
+        // Hide the start button and display the game canvas
+        startButton.style.display = "none";
+        canvas.style.display = "block";
+
+        // Reset the game state
+        resetGame();
+
+        // Call the function to periodically spawn targets after the game starts
+        setInterval(spawnTargets, 1000);
+
+        // Disable the start button and initialize game timers
+        startButton.disabled = true;
+        startTime = new Date().getTime();
+        gameInterval = setInterval(updateTimer, 1000);
+
+        // Start the game loop for continuous updates and rendering
+        gameLoop();
+
+        // Play the background music
+        backgroundMusic.play();
+    }
+}
+
+
+
 
 
 
