@@ -1,39 +1,100 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Isolation - Jetfighter Shooter Website
 
-Welcome,
+Welcome to the Isolation Jetfighter Shooter website, where you can immerse yourself in an action-packed 2D JavaScript game. Take control of a fighter jet, eliminate hostile forces, and strive for victory in intense aerial battles.
 
-This is the Code Institute student template for Codeanywhere. If you are using Gitpod then you need [this template](https://github.com/Code-Institute-Org/gitpod-full-template) instead.  We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions.
+## Table of Contents
 
-You can safely delete this README.md file, or change it for your own project. Please do read it at least once, though! It contains some important information about Codeanywhere and the extensions we use. Some of this information has been updated since the video content was created. The last update to this file was: **August 30th, 2023**
+- [Isolation - Jetfighter Shooter Website](#isolation---jetfighter-shooter-website)
+  - [Table of Contents](#table-of-contents)
+  - [Mission Log](#mission-log)
+  - [How to Play](#how-to-play)
+    - [Game Controls](#game-controls)
+    - [Health and Survival](#health-and-survival)
+    - [Mobile and Tablet Controls](#mobile-and-tablet-controls)
+  - [Game Instructions](#game-instructions)
+  - [Canvas for the Game](#canvas-for-the-game)
+  - [Game Elements](#game-elements)
+  - [Player Stats and Game Controls](#player-stats-and-game-controls)
+  - [JavaScript Functionality](#javascript-functionality)
+  - [Contact Information](#contact-information)
+  - [Credits](#credits)
 
-## Codeanywhere Reminders
+## Mission Log
 
-To run a frontend (HTML, CSS, Javascript only) application in Codeanywhere, in the terminal, type:
+Prepare for an adrenaline-filled mission! You are the last surviving member of your squad, stranded in enemy territory. Your objective: eliminate all hostile forces within a limited timeframe of 2 minutes. Your precision and resourcefulness will determine your success. Good luck, soldier!
 
-`python3 -m http.server`
+## How to Play
 
-A button should appear to click: _Open Preview_ or _Open Browser_.
+Are you ready for action? Here's how you can play the game:
 
-To run a frontend (HTML, CSS, Javascript only) application in Codeanywhere with no-cache, you can use this alias for `python3 -m http.server`.
+### Game Controls
 
-`http_server`
+- **W:** Move Up
+- **S:** Move Down
+- **A:** Move Left
+- **D:** Move Right
+- **Mouse Movement:** Aim your fighter jet
+- **Space Bar:** Fire your weapons
+- **Pause Button:** Pause/Resume the game
+- **End Button:** End the game
 
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
+### Health and Survival
 
-A button should appear to click: _Open Preview_ or _Open Browser_.
+Your health is displayed as a percentage at the top. Eliminate enemies and dodge their attacks to stay alive.
 
-In Codeanywhere you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
+### Mobile and Tablet Controls
 
-To log into the Heroku toolbelt CLI:
+On tablet and mobile devices, you can control the game using on-screen buttons:
 
-1. Log in to your Heroku account and go to _Account Settings_ in the menu under your avatar.
-2. Scroll down to the _API Key_ and click _Reveal_
-3. Copy the key
-4. In Codeanywhere, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
+- **Up Button:** Move Up
+- **Down Button:** Move Down
+- **Left Button:** Move Left
+- **Right Button:** Move Right
+- **Shoot Button:** Fire your weapons
 
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with _Regenerate API Key_.
+Good luck, and may victory be yours!
 
----
+## Game Instructions
 
-Happy coding!
+For a quick reference, you can show or hide the game instructions with the "Show Instructions" button.
+
+## Canvas for the Game
+
+The game is rendered within a canvas element with a width of 800 pixels and a height of 600 pixels.
+
+## Game Elements
+
+- **Fighter Jet Image:** The image of your fighter jet is used in the game.
+- **Audio Elements:** Game sounds and background music are provided through audio elements.
+- **Enemy Target Image:** The image of enemy targets is used in the game.
+
+## Player Stats and Game Controls
+
+- **Player Name:** Enter your name to start the game.
+- **Start Button:** Begin the game.
+- **Pause Button:** Pause the game.
+- **Reset Button:** Reset the game.
+- **End Button:** End the game.
+- **Timer:** Shows the remaining time (02:00).
+- **Health:** Displays your health (100%).
+- **Score:** Keeps track of your score.
+- **On-Screen Touch Control Buttons:** For mobile and tablet devices.
+
+## JavaScript Functionality
+
+The game functionality is powered by JavaScript, which is included in the `script.js` file.
+
+## Contact Information
+
+If you have any questions, feedback, or suggestions, feel free to contact us:
+
+- Email: [your-email@example.com](mailto:your-email@example.com)
+- Phone: +1 123-456-7890
+
+## Credits
+
+- Fighter Jet Image: [Image Source](your-image-source-link)
+- Audio Elements: [Sound Source](your-audio-source-link)
+- Enemy Target Image: [Image Source](your-image-source-link)
+- Game Development: [Your Name](your-portfolio-link)
+
