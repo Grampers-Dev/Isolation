@@ -603,6 +603,51 @@ window.addEventListener("keyup", (event) => {
     }
 });
 
+// Event listeners for touch controls on buttons (touchstart)
+document.querySelector(".up-button").addEventListener("touchstart", () => {
+    gunner.movingUp = true; // Set gunner's upward movement flag to true
+});
+
+document.querySelector(".down-button").addEventListener("touchstart", () => {
+    gunner.movingDown = true; // Set gunner's downward movement flag to true
+});
+
+document.querySelector(".left-button").addEventListener("touchstart", () => {
+    gunner.movingLeft = true; // Set gunner's leftward movement flag to true
+});
+
+document.querySelector(".right-button").addEventListener("touchstart", () => {
+    gunner.movingRight = true; // Set gunner's rightward movement flag to true
+});
+
+document.querySelector(".shoot-button").addEventListener("touchstart", () => {
+    // Space bar pressed, initiate shooting
+    isShooting = true; // Set the shooting flag to true
+});
+
+// Event listeners for touch controls on buttons (touchend)
+document.querySelector(".up-button").addEventListener("touchend", () => {
+    gunner.movingUp = false; // Set gunner's upward movement flag to false
+});
+
+document.querySelector(".down-button").addEventListener("touchend", () => {
+    gunner.movingDown = false; // Set gunner's downward movement flag to false
+});
+
+document.querySelector(".left-button").addEventListener("touchend", () => {
+    gunner.movingLeft = false; // Set gunner's leftward movement flag to false
+});
+
+document.querySelector(".right-button").addEventListener("touchend", () => {
+    gunner.movingRight = false; // Set gunner's rightward movement flag to false
+});
+
+document.querySelector(".shoot-button").addEventListener("touchend", () => {
+    // Space bar released, stop shooting
+    isShooting = false; // Set the shooting flag to false
+});
+
+
 
 
 
