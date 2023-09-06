@@ -175,5 +175,66 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+// Function to update the game state and perform various game-related tasks
+function update() {
+    clearCanvas(); // Clear the canvas to prepare for rendering the updated game state
+    handleInput(); // Handle player input (e.g., movement and shooting)
+    drawGunner(); // Draw the gunner character on the canvas
+    drawBullets(); // Draw bullets fired by the gunner
+
+    // Update the positions of player bullets based on their angles and speeds
+    bullets.forEach((bullet) => {
+        const bulletDirection = {
+            x: Math.cos(bullet.angle), // Calculate x-component of the bullet's direction
+            y: Math.sin(bullet.angle), // Calculate y-component of the bullet's direction
+        };
+
+        // Update the bullet's position based on its speed and direction
+        bullet.x += bullet.speed * bulletDirection.x;
+        bullet.y += bullet.speed * bulletDirection.y;
+    });
+
+    // Update the positions of enemy bullets based on their angles and speeds
+    enemyBullets.forEach((bullet) => {
+        bullet.x += bullet.speed * Math.cos(bullet.angle); // Update x-coordinate
+        bullet.y += bullet.speed * Math.sin(bullet.angle); // Update y-coordinate
+    });
+
+    // Update the positions of targets (enemies) and handle their interactions with the gunner
+    targets.forEach((target) => {
+        const dx = gunner.x - target.x; // Calculate the horizontal distance between gunner and target
+        const dy = gunner.y - target.y; // Calculate the vertical distance between gunner and target
+        const distance = Math.sqrt(dx * dx + dy * dy); // Calculate the distance between gunner and target
+        const angleToGunner = Math.atan2(dy, dx); // Calculate the angle from the target to the gunner
+
+        // Rotate the target to face the gunner
+        target.angle = angleToGunner;
+
+        // Move the target along its own direction
+        target.x += target.speed * Math.cos(target.angle);
+        target.y += target.speed * Math.sin(target.angle);
+
+        // If the target gets too close to the gunner, damage the gunner's health
+        if (distance < 15) {
+            gunner.health -= 2; // Reduce gunner's health by 2 points
+            healthElement.textContent = `Health: ${gunner.health}%`; // Update health display
+            if (gunner.health <= 0) {
+                endGame(); // End the game if the gunner's health reaches zero or below
+            }
+        }
+    });
+
+    drawTargets(); // Draw the targets (enemies) on the canvas
+    handleCollisions(); // Handle collisions between bullets and targets
+
+    // Check if the game is over and the gunner's health is depleted
+    if (isGameOver && gunner.health <= 0) {
+        clearCanvas(); // Clear the canvas for the game over message
+        drawDeathMessage(); // Display the game over message
+        return; // Return early to avoid executing other parts of the function
+    }
+}
+
+
 
 
