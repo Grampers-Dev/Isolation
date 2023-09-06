@@ -246,3 +246,25 @@ button:hover {
 .dpad-button:hover {
     background-color: #2574a9;
 }
+
+/* Make the canvas responsive */
+.game-canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* CSS adjustments for screens narrower than 320px */
+@media (max-width: 320px) {
+    /* Adjustments for smaller screens */
+
+    .game-canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    div.player-stats,
+    div.mission-log {
+        padding: 10px;
+        /* Reduce padding for smaller screens */
+    }
+}
