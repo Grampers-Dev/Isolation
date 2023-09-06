@@ -689,6 +689,15 @@ window.addEventListener("keyup", (event) => {
     }
 });
 
+// Function to draw a death message on the canvas
+function drawDeathMessage() {
+    ctx.fillStyle = "red"; // Set the fill color to red for the death message
+    ctx.font = "40px 'Black Ops One', sans-serif"; // Set the font and size
+    ctx.textAlign = "center"; // Center-align the text
+    ctx.fillText("You Died!", canvas.width / 2, canvas.height / 2); // Draw the death message in the center of the canvas
+}
+
+
 
 
 
