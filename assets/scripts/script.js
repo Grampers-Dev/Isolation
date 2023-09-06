@@ -787,6 +787,13 @@ function spawnTargets() {
     }
 }
 
+// Set an interval to call the 'shoot' function repeatedly every 100 milliseconds
+setInterval(shoot, 100); // Adjust the shooting interval as needed
+
+// Start the game loop, which continuously updates the game state and animations
+gameLoop();
+
+
 
 
 
