@@ -697,6 +697,38 @@ function drawDeathMessage() {
     ctx.fillText("You Died!", canvas.width / 2, canvas.height / 2); // Draw the death message in the center of the canvas
 }
 
+// Define a variable to keep track of whether the gunshot sound is currently playing
+let isGunshotPlaying = false;
+
+// Function to handle shooting action
+function shoot() {
+    if (isGameOver) {
+        return; // Stop shooting when the game is over
+    }
+
+    if (isShooting) {
+        if (!isGunshotPlaying) {
+            gunshotAudio.currentTime = 0; // Reset the gunshot audio to the beginning
+            gunshotAudio.play(); // Play the gunshot sound
+            isGunshotPlaying = true; // Set the flag to indicate that the gunshot sound is playing
+        }
+
+        // Create a bullet object with its initial position, speed, and angle
+        const bullet = {
+            x: gunner.x,
+            y: gunner.y,
+            speed: 6, // Bullet's movement speed
+            angle: Math.atan2(mouse.y - gunner.y, mouse.x - gunner.x), // Calculate the angle towards the mouse cursor
+        };
+
+        bullets.push(bullet); // Add the bullet to the bullets array
+    } else {
+        isGunshotPlaying = false; // Set the flag to indicate that the gunshot sound has stopped playing
+        gunshotAudio.pause(); // Pause the gunshot sound
+    }
+}
+
+
 
 
 
