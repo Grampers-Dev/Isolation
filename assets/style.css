@@ -182,3 +182,18 @@ button:hover {
     margin: 0 auto;
     margin-top: 20px;
 }
+
+/* Styling for fighter jet */
+.fighter-jet {
+    display: none;
+}
+
+/* Styling for enemy target */
+.target-image {
+    display: none;
+}
+
+/* Styling for player name display */
+.player-name-display {
+    display: none;
+}
