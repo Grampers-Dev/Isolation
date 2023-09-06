@@ -115,3 +115,31 @@ function drawGunner() {
     ctx.restore();
 }
 
+// Function to draw bullets on the canvas
+function drawBullets() {
+    // Loop through the 'bullets' array and draw each bullet
+    bullets.forEach((bullet) => {
+        ctx.fillStyle = "green"; // Set the fill color to green
+        ctx.beginPath();
+
+        // Draw a circular bullet at the specified (x, y) position with a radius of 4 (adjust as needed)
+        ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
+
+        ctx.fill(); // Fill the bullet with the specified color
+        ctx.closePath(); // Close the path for this bullet
+    });
+
+    // Loop through the 'enemyBullets' array and draw each enemy bullet
+    enemyBullets.forEach((bullet) => {
+        ctx.fillStyle = "red"; // Set the fill color to red
+        ctx.beginPath();
+
+        // Draw a circular enemy bullet at the specified (x, y) position with a radius of 4 (adjust as needed)
+        ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
+
+        ctx.fill(); // Fill the enemy bullet with the specified color
+        ctx.closePath(); // Close the path for this enemy bullet
+    });
+}
+
+
