@@ -49,3 +49,29 @@ startButton.addEventListener("click", () => {
     // Call the 'startGame' function to initiate the game
     startGame(); // Call your startGame function here
 });
+
+// Attach a click event listener to the reset button
+resetButton.addEventListener("click", () => {
+    resetGame(); // Call the resetGame() function when the reset button is clicked
+});
+
+// Define an object 'gunner' representing a player or character
+const gunner = {
+    x: canvas.width / 2, // Initial x-coordinate at the center of the canvas
+    y: canvas.height / 2, // Initial y-coordinate at the center of the canvas
+    speed: 3, // The speed of the gunner character
+    angle: 0, // The angle at which the gunner is facing (in degrees)
+    health: 100, // The health points of the gunner character
+};
+
+// Initialize arrays to store bullets, targets, and enemy bullets
+const bullets = []; // Store bullets fired by the gunner
+const targets = []; // Store targets or enemies
+const enemyBullets = []; // Store bullets fired by enemies
+
+// Create a 'movementKeys' Set to keep track of keys currently pressed for movement
+const movementKeys = new Set();
+
+// Initialize a boolean variable 'isShooting' to track if the gunner is shooting
+let isShooting = false;
+
