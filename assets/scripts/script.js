@@ -235,6 +235,35 @@ function update() {
     }
 }
 
+// Function to handle player input for character movement and aiming
+function handleInput() {
+    // Check if the gunner character is moving upward
+    if (gunner.movingUp) {
+        gunner.y -= gunner.speed; // Move the gunner's y-coordinate upwards
+    }
+
+    // Check if the gunner character is moving downward
+    if (gunner.movingDown) {
+        gunner.y += gunner.speed; // Move the gunner's y-coordinate downwards
+    }
+
+    // Check if the gunner character is moving leftward
+    if (gunner.movingLeft) {
+        gunner.x -= gunner.speed; // Move the gunner's x-coordinate to the left
+    }
+
+    // Check if the gunner character is moving rightward
+    if (gunner.movingRight) {
+        gunner.x += gunner.speed; // Move the gunner's x-coordinate to the right
+    }
+
+    // Calculate the angle at which the gunner character is aiming based on the mouse position
+    const dx = mouse.x - gunner.x; // Calculate the horizontal distance between mouse and gunner
+    const dy = mouse.y - gunner.y; // Calculate the vertical distance between mouse and gunner
+    gunner.angle = Math.atan2(dy, dx); // Calculate the angle in radians using arctangent
+}
+
+
 
 
 
