@@ -142,4 +142,26 @@ function drawBullets() {
     });
 }
 
+function drawTargets() {
+    const targetImage = document.querySelector(".target-image"); // Get the target image element
+    targets.forEach((target) => {
+        ctx.save();
+        ctx.translate(target.x, target.y);
+        ctx.rotate(target.angle); // Apply rotation angle
+
+        // Replace the drawing code with an image
+        const targetWidth = 80; // Adjust the width as needed
+        const targetHeight = 48; // Adjust the height as needed
+        ctx.drawImage(
+            targetImage,
+            -targetWidth / 2,
+            -targetHeight / 2,
+            targetWidth,
+            targetHeight
+        );
+
+        ctx.restore();
+    });
+}
+
 
