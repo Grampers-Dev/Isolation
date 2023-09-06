@@ -489,6 +489,73 @@ function endGame() {
     }
 }
 
+// Function to reset the game state and prepare for a new game
+function resetGame() {
+    // Reset the gunner's position to the center of the canvas and health to 100%
+    gunner.x = canvas.width / 2;
+    gunner.y = canvas.height / 2;
+    gunner.health = 100;
+
+    // Update the health display element with the new health value
+    healthElement.textContent = `Health: ${gunner.health}%`;
+
+    // Clear the arrays for bullets, targets, and enemy bullets
+    bullets.length = 0;
+    targets.length = 0;
+    enemyBullets.length = 0;
+
+    // Reset the remaining game time, pause and game over states
+    remainingTime = 120;
+    isPaused = false;
+    isGameOver = false;
+
+    // Reset the "Pause" button text to "Pause"
+    pauseButton.textContent = "Pause";
+
+    // Reset the player's score to 0 and update the score display element
+    score = 0;
+    scoreElement.textContent = `Score: ${score}`;
+
+    // Reset the game's start time
+    startTime = new Date().getTime();
+
+    // Clear the game canvas
+    clearCanvas();
+
+    // Hide any displayed death message by clearing the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Enable the "Start," "Pause," and "End" buttons
+    startButton.disabled = false;
+    pauseButton.disabled = false;
+    endButton.disabled = false;
+
+    // Reset the player's name display and show the input field
+    const playerNameInput = document.querySelector(".player-name");
+    const playerNameDisplay = document.querySelector(".player-name-display");
+    playerNameInput.style.display = "inline";
+    playerNameInput.value = ""; // Clear the input value
+    playerNameDisplay.style.display = "none";
+    playerNameDisplay.textContent = "";
+
+    // Stop and reset background music
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+    backgroundMusic2.pause();
+    backgroundMusic2.currentTime = 0;
+
+    // Reset the leaderboard
+    leaderboard = [];
+
+    // Resume the game loop if it was paused
+    if (!gameInterval) {
+        startTime = new Date().getTime();
+        gameInterval = setInterval(updateTimer, 1000);
+        gameLoop();
+    }
+}
+
+
 
 
 
