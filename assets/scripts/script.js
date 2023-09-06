@@ -447,6 +447,49 @@ function startGame() {
     }
 }
 
+// Function to handle game ending and cleanup
+function endGame() {
+    // Clear the game interval to stop continuous updates
+    clearInterval(gameInterval);
+
+    // Mark the game as over
+    isGameOver = true;
+
+    // Enable the "Start" button and disable the "Pause" and "End" buttons
+    startButton.disabled = false;
+    pauseButton.disabled = true;
+    endButton.disabled = true;
+
+    // Pause or stop background music and sound effects
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0; // Reset audio to the beginning
+    backgroundMusic2.pause();
+    backgroundMusic2.currentTime = 0;
+
+    // Retrieve the player's name from the input field
+    const playerName = document.querySelector(".player-name").value;
+
+    // Create a player stats object with name, score, and remaining time
+    const playerStats = {
+        name: playerName,
+        score: score,
+        time: remainingTime,
+    };
+
+    // Add the player's stats to the leaderboard array
+    leaderboard.push(playerStats);
+
+    // Clear the shooting interval
+    clearInterval(shootingInterval);
+
+    // Check if the game ended due to the gunner's health reaching zero
+    if (gunner.health <= 0) {
+        clearCanvas(); // Clear the game canvas
+        drawDeathMessage(); // Display a message indicating the game over condition
+    }
+}
+
+
 
 
 
