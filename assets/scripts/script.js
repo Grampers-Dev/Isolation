@@ -402,7 +402,9 @@ pauseButton.addEventListener("click", () => {
 // Event listener for the "End" button click
 endButton.addEventListener("click", () => {
     endGame(); // Call the endGame function to end the game
-});// Function to start the game and initialize game elements
+});
+
+// Function to start the game and initialize game elements
 function startGame() {
     // Get references to relevant HTML elements
     const startButton = document.querySelector(".start-button");
