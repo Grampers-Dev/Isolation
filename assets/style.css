@@ -8,3 +8,37 @@ canvas.game-canvas {
     border-radius: 25px;
     margin: 0 auto;
 }
+
+/* Reset default styles for the body */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("assets/vecteezy_laser-light-mesh-neon-light-texture-background_3669983.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    color: white;
+    font-family: "Black Ops One";
+    /* Apply 'Black Ops One' font */
+    max-width: fit-content;
+}
+
+/* Define a class for elements with a moving background */
+.moving-background {
+    animation: moveBackground 125s linear infinite;
+    background-image: url("assets/canvas-background-image-3.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+/* Define the animation for moving background */
+@keyframes moveBackground {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
+}
