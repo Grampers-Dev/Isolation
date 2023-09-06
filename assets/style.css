@@ -42,3 +42,35 @@ body {
         background-position: 100% 100%;
     }
 }
+
+/* Reset default styles for common HTML elements */
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+/* Style for the page header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 2px 10px 10px #b0dfff;
+    text-align: center;
+    background-color: #333;
+    padding: 20px;
+    width: auto;
+}
+
+/* Style for the logo */
+.logo {
+    /* font-size: 24px; */
+    /* Commented out font size */
+    font-weight: bold;
+    text-align: center;
+}
