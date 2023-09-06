@@ -3,7 +3,7 @@
 
 /* Styling for the game canvas */
 canvas.game-canvas {
-    background-image: url("assets/images/canvas-background-image-2.jpg");
+    background-image: url("./images/canvas-background-image-2.jpg");
     box-shadow: 2px 10px 10px #5f81ec;
     border-radius: 25px;
     margin: 0 auto;
@@ -13,7 +13,7 @@ canvas.game-canvas {
 body {
     margin: 0;
     padding: 0;
-    background-image: url("assets/images/vecteezy_laser-light-mesh-neon-light-texture-background_3669983.jpg");
+    background-image: url("./images/vecteezy_laser-light-mesh-neon-light-texture-background_3669983.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
