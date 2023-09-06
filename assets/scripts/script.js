@@ -647,6 +647,49 @@ document.querySelector(".shoot-button").addEventListener("touchend", () => {
     isShooting = false; // Set the shooting flag to false
 });
 
+// Handle mousemove event (if needed)
+canvas.addEventListener("mousemove", (event) => {
+    // Get the canvas's position relative to the viewport
+    const rect = canvas.getBoundingClientRect();
+
+    // Update the mouse object with the current mouse coordinates
+    mouse.x = event.clientX - rect.left;
+    mouse.y = event.clientY - rect.top;
+});
+
+// Handle keyboard events (if needed)
+window.addEventListener("keydown", (event) => {
+    if (event.key === "w") {
+        gunner.movingUp = true; // Set gunner's upward movement flag to true
+    } else if (event.key === "s") {
+        gunner.movingDown = true; // Set gunner's downward movement flag to true
+    } else if (event.key === "a") {
+        gunner.movingLeft = true; // Set gunner's leftward movement flag to true
+    } else if (event.key === "d") {
+        gunner.movingRight = true; // Set gunner's rightward movement flag to true
+    } else if (event.key === " ") {
+        // Space bar pressed, initiate shooting
+        isShooting = true; // Set the shooting flag to true
+    }
+});
+
+// Handle keyboard keyup events (if needed)
+window.addEventListener("keyup", (event) => {
+    if (event.key === "w") {
+        gunner.movingUp = false; // Set gunner's upward movement flag to false
+    } else if (event.key === "s") {
+        gunner.movingDown = false; // Set gunner's downward movement flag to false
+    } else if (event.key === "a") {
+        gunner.movingLeft = false; // Set gunner's leftward movement flag to false
+    } else if (event.key === "d") {
+        gunner.movingRight = false; // Set gunner's rightward movement flag to false
+    } else if (event.key === " ") {
+        // Space bar released, stop shooting
+        isShooting = false; // Set the shooting flag to false
+    }
+});
+
+
 
 
 
