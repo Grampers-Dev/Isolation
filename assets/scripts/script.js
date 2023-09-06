@@ -263,6 +263,54 @@ function handleInput() {
     gunner.angle = Math.atan2(dy, dx); // Calculate the angle in radians using arctangent
 }
 
+// Function to handle collisions between bullets and targets, and between enemy bullets and the gunner
+function handleCollisions() {
+    // Iterate through all player bullets and targets to check for collisions
+    bullets.forEach((bullet, bulletIndex) => {
+        targets.forEach((target, targetIndex) => {
+            // Check if the bullet is within a close range of the target (collided)
+            if (
+                bullet.x > target.x - 15 &&
+                bullet.x < target.x + 15 &&
+                bullet.y > target.y - 15 &&
+                bullet.y < target.y + 15
+            ) {
+                // Remove the collided bullet and target from their respective arrays
+                bullets.splice(bulletIndex, 1);
+                targets.splice(targetIndex, 1);
+
+                // Increase the player's score when a target is hit
+                score += 10;
+                scoreElement.textContent = `Score: ${score}`; // Update the score display
+            }
+        });
+    });
+
+    // Iterate through all enemy bullets to check for collisions with the gunner
+    enemyBullets.forEach((bullet, bulletIndex) => {
+        // Calculate the distance between the gunner and the enemy bullet
+        const dx = gunner.x - bullet.x;
+        const dy = gunner.y - bullet.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Check if the enemy bullet is within a close range of the gunner (collided)
+        if (distance < 5) {
+            // Reduce the gunner's health and update the health display
+            gunner.health -= 10;
+            healthElement.textContent = `Health: ${gunner.health}%`;
+
+            // Remove the collided enemy bullet from the array
+            enemyBullets.splice(bulletIndex, 1);
+
+            // Check if the gunner's health has reached zero or below, and end the game if so
+            if (gunner.health <= 0) {
+                endGame();
+            }
+        }
+    });
+}
+
+
 
 
 
