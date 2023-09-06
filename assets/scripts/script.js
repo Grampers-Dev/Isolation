@@ -728,6 +728,28 @@ function shoot() {
     }
 }
 
+// Function to shoot a bullet from an enemy target towards the player's position
+function shootTargetBullet(target) {
+    // Calculate the angle from the target to the player's position
+    const angle = Math.atan2(gunner.y - target.y, gunner.x - target.x);
+
+    // Create a bullet object for the enemy target with its initial position, speed, and angle
+    const bullet = {
+        x: target.x,
+        y: target.y,
+        speed: 4.5, // Bullet's movement speed
+        angle: angle, // Angle towards the player's position
+    };
+
+    enemyBullets.push(bullet); // Add the bullet to the enemyBullets array
+
+    // Play the target gunfire sound
+    const targetGunshotAudio = document.querySelector(".target-gunshot-audio");
+    targetGunshotAudio.currentTime = 0; // Reset the target gunfire audio to the beginning
+    targetGunshotAudio.play(); // Play the target gunfire sound
+}
+
+
 
 
 
