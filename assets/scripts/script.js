@@ -342,6 +342,42 @@ let score = 0;        // Variable to keep track of the player's score
 // Update the score display element with the initial score value
 scoreElement.textContent = `Score: ${score}`;
 
+// Function to update the game timer and check for game over conditions
+function updateTimer() {
+    // Check if the game is not paused and the game is not over
+    if (!isPaused && !isGameOver) {
+        // Get the current time in milliseconds
+        const currentTime = new Date().getTime();
+
+        // Calculate the elapsed time since the last update and convert it to seconds
+        const elapsedTime = (currentTime - startTime) / 1000;
+
+        // Update the remaining game time while ensuring it doesn't go below zero
+        remainingTime = Math.max(0, remainingTime - elapsedTime);
+
+        // Check if the game has ended due to running out of time or the gunner's health
+        if (remainingTime <= 0 || gunner.health <= 0) {
+            endGame(); // Call the endGame function to handle game over
+        }
+
+        // Calculate minutes and seconds from the remaining time
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = Math.floor(remainingTime % 60);
+
+        // Format the time in MM:SS format with leading zeros
+        const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
+            seconds
+        ).padStart(2, "0")}`;
+
+        // Update the timer display element with the formatted time
+        timerElement.textContent = `Time left: ${formattedTime}`;
+
+        // Update the start time to the current time for the next iteration
+        startTime = currentTime;
+    }
+}
+
+
 
 
 
