@@ -22,3 +22,30 @@ backgroundMusic.volume = 0.5;
 const instructionsButton = document.querySelector(".instructions-button");
 const instructions = document.querySelector(".instructions");
 let shootingInterval;
+
+// Define a constant for speed increment
+const speedIncrement = 0.5; // Increase speed by 0.5 units every time
+
+// Add an event listener to the instructionsButton element
+instructionsButton.addEventListener("click", () => {
+    // Check if the 'instructions' element is currently hidden
+    if (instructions.style.display === "none") {
+        // If hidden, display the 'instructions' element and update the button text
+        instructions.style.display = "block";
+        instructionsButton.textContent = "Hide Instructions";
+    } else {
+        // If not hidden, hide the 'instructions' element and update the button text
+        instructions.style.display = "none";
+        instructionsButton.textContent = "Show Instructions";
+    }
+});
+
+// Add an event listener to the startButton element
+startButton.addEventListener("click", () => {
+    // Play background music using the 'backgroundMusic' and 'backgroundMusic2' audio elements
+    backgroundMusic.play();
+    backgroundMusic2.play();
+
+    // Call the 'startGame' function to initiate the game
+    startGame(); // Call your startGame function here
+});
