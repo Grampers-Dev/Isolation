@@ -310,6 +310,27 @@ function handleCollisions() {
     });
 }
 
+// Function that serves as the game loop responsible for updating the game and rendering frames
+function gameLoop() {
+    // Check if the game is not paused and the game is not over
+    if (!isPaused && !isGameOver) {
+        // Call the 'update' function to update the game state
+        update();
+
+        // Iterate through all targets to simulate enemy shooting with a certain probability
+        targets.forEach((target) => {
+            // Randomly determine if the target should shoot (approx. 1% chance per frame)
+            if (Math.random() < 0.01) {
+                shootTargetBullet(target); // Call a function to make the target shoot a bullet
+            }
+        });
+    }
+
+    // Request the next animation frame to continue the game loop
+    requestAnimationFrame(gameLoop);
+}
+
+
 
 
 
