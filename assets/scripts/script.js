@@ -330,6 +330,19 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
+// Declaration of game-related variables
+
+let gameInterval;     // Variable to store the game loop interval
+let startTime;        // Variable to store the start time of the game
+let remainingTime = 120; // Variable to store the remaining game time (in seconds)
+let isPaused = false; // Variable to track whether the game is currently paused
+let isGameOver = false; // Variable to track whether the game is over
+let score = 0;        // Variable to keep track of the player's score
+
+// Update the score display element with the initial score value
+scoreElement.textContent = `Score: ${score}`;
+
+
 
 
 
