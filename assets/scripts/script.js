@@ -377,6 +377,34 @@ function updateTimer() {
     }
 }
 
+// Event listener for the "Start" button click
+startButton.addEventListener("click", () => {
+    // Check if the game interval is not already running
+    if (!gameInterval) {
+        resetGame(); // Reset the game state (additional function call)
+        startGame(); // Start the game
+    }
+});
+
+// Event listener for the "Pause" button click
+pauseButton.addEventListener("click", () => {
+    // Toggle the game's pause state (paused or resumed)
+    isPaused = !isPaused;
+
+    // Update the button text to reflect the current pause state
+    if (isPaused) {
+        pauseButton.textContent = "Resume"; // Set button text to "Resume" when paused
+    } else {
+        pauseButton.textContent = "Pause"; // Set button text to "Pause" when resumed
+    }
+});
+
+// Event listener for the "End" button click
+endButton.addEventListener("click", () => {
+    endGame(); // Call the endGame function to end the game
+});
+
+
 
 
 
