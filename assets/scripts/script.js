@@ -749,6 +749,45 @@ function shootTargetBullet(target) {
     targetGunshotAudio.play(); // Play the target gunfire sound
 }
 
+// Initialize a variable to track whether the game is running
+let gameIsRunning = false;
+
+// Function to spawn enemy targets on the canvas
+function spawnTargets() {
+    // Get the height of the canvas
+    const canvasHeight = canvas.height;
+
+    // Generate a random Y-coordinate for the target within the canvas height
+    const targetY = Math.random() * canvasHeight;
+
+    // Get the current time to calculate elapsed time and intervals
+    const currentTime = new Date().getTime();
+    const elapsedTime = (currentTime - startTime) / 1000;
+
+    // Calculate elapsed intervals (e.g., every 1 second)
+    const elapsedIntervals = Math.floor(elapsedTime / 1);
+
+    // Calculate the speed of the target with randomness and increment
+    const targetSpeed =
+        Math.random() * (2 + speedIncrement * elapsedIntervals) + 2;
+
+    // Create a target object with its initial position, speed, and angle towards the player
+    const target = {
+        x: canvas.width, // Initial X-coordinate outside the canvas
+        y: targetY, // Random Y-coordinate within the canvas height
+        speed: targetSpeed, // Randomized target speed
+        angle: Math.atan2(gunner.y - targetY, gunner.x - canvas.width), // Angle towards the player's position
+    };
+
+    targets.push(target); // Add the target to the targets array
+
+    // Check if the game is running and randomly trigger shooting from the spawned target
+    if (gameIsRunning && Math.random() < 0.01) {
+        shootTargetBullet(target); // Call the shooting function for the spawned target
+    }
+}
+
+
 
 
 
