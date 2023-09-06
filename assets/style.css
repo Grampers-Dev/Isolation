@@ -197,3 +197,52 @@ button:hover {
 .player-name-display {
     display: none;
 }
+
+/* Styling for game controller buttons */
+.game-controller {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.game-button {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-family: "Black Ops One";
+    /* Apply 'Black Ops One' font */
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Change game button color on hover */
+.game-button:hover {
+    background-color: #2574a9;
+}
+
+/* Styling for D-pad buttons */
+.dpad-button {
+    background-color: #3498db;
+    border: 2px solid white;
+    color: white;
+    font-size: 16px;
+    font-family: "Black Ops One";
+    /* Apply 'Black Ops One' font */
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Change D-pad button color on hover */
+.dpad-button:hover {
+    background-color: #2574a9;
+}
