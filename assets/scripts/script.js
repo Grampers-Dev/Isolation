@@ -790,45 +790,6 @@ function spawnTargets() {
 // Set an interval to call the 'shoot' function repeatedly every 100 milliseconds
 setInterval(shoot, 100); // Adjust the shooting interval as needed
 
-// Function to handle screen size
-function handleScreenSize() {
-    const screenWidth = window.innerWidth || document.documentElement.clientWidth;
-
-    if (screenWidth <= 768) {
-        // Screen size is 768px or lower
-        // Adjust gunner behavior and position
-        gunner.x = 40; // Set the gunner's X position to the left side
-        gunner.angle = Math.PI / 2; // Set the initial angle to face right (90 degrees)
-
-        // Limit movement to up and down
-        if (gunner.movingUp) {
-            gunner.y -= gunner.speed;
-        }
-        if (gunner.movingDown) {
-            gunner.y += gunner.speed;
-        }
-
-        // Update the mouse coordinates based on the new canvas size
-        updateMouseCoordinates();
-    } else {
-        // Full movement control (up, down, left, right)
-        if (gunner.movingUp) {
-            gunner.y -= gunner.speed;
-        }
-        if (gunner.movingDown) {
-            gunner.y += gunner.speed;
-        }
-        if (gunner.movingLeft) {
-            gunner.x -= gunner.speed;
-        }
-        if (gunner.movingRight) {
-            gunner.x += gunner.speed;
-        }
-
-        // Update the mouse coordinates based on the new canvas size
-        updateMouseCoordinates();
-    }
-}
 
 function handleTouchEvents(event) {
     event.preventDefault(); // Prevent the default touch event behavior
