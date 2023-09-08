@@ -805,16 +805,17 @@ function handleTouchEvents(event) {
         // Calculate the angle from the gunner's position to the touch point
         const angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
 
+        // Adjust the angle to be within the range [0, 2 * Math.PI]
+        gunner.angle = (angle + 2 * Math.PI) % (2 * Math.PI);
+
         console.log("TouchX:", touchX);
         console.log("TouchY:", touchY);
-        console.log("Angle:", angle);
-
-        // Set the gunner's angle to the calculated angle
-        gunner.angle = angle;
+        console.log("Angle:", gunner.angle);
     } else if (event.type === "touchend") {
         isShooting = false;
     }
 }
+
 
 // Add a flag to track if a touch is in progress
 let isTouching = false;
