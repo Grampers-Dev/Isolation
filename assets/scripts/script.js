@@ -769,7 +769,7 @@ function spawnTargets() {
 
     // Calculate the speed of the target with randomness and increment
     const targetSpeed =
-        Math.random() * (2 + speedIncrement * elapsedIntervals) + 2;
+        Math.random() * (1 + speedIncrement * elapsedIntervals) + 1;
 
     // Create a target object with its initial position, speed, and angle towards the player
     const target = {
@@ -789,6 +789,129 @@ function spawnTargets() {
 
 // Set an interval to call the 'shoot' function repeatedly every 100 milliseconds
 setInterval(shoot, 100); // Adjust the shooting interval as needed
+
+// Function to handle screen size
+function handleScreenSize() {
+    const screenWidth = window.innerWidth || document.documentElement.clientWidth;
+
+    if (screenWidth <= 768) {
+        // Screen size is 768px or lower
+        // Adjust gunner behavior and position
+        gunner.x = 40; // Set the gunner's X position to the left side
+        gunner.angle = Math.PI / 2; // Set the initial angle to face right (90 degrees)
+
+        // Limit movement to up and down
+        if (gunner.movingUp) {
+            gunner.y -= gunner.speed;
+        }
+        if (gunner.movingDown) {
+            gunner.y += gunner.speed;
+        }
+
+        // Update the mouse coordinates based on the new canvas size
+        updateMouseCoordinates();
+    } else {
+        // Full movement control (up, down, left, right)
+        if (gunner.movingUp) {
+            gunner.y -= gunner.speed;
+        }
+        if (gunner.movingDown) {
+            gunner.y += gunner.speed;
+        }
+        if (gunner.movingLeft) {
+            gunner.x -= gunner.speed;
+        }
+        if (gunner.movingRight) {
+            gunner.x += gunner.speed;
+        }
+
+        // Update the mouse coordinates based on the new canvas size
+        updateMouseCoordinates();
+    }
+}
+
+function handleTouchEvents(event) {
+    event.preventDefault(); // Prevent the default touch event behavior
+    const rect = canvas.getBoundingClientRect();
+
+    if (event.type === "touchstart" || event.type === "touchmove") {
+        isShooting = true;
+
+        // Calculate the angle between the gunner and touch point
+        const touchX = event.touches[0].clientX - rect.left;
+        const touchY = event.touches[0].clientY - rect.top;
+
+        // Calculate the angle from the gunner's position to the touch point
+        const angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
+
+        console.log("TouchX:", touchX);
+        console.log("TouchY:", touchY);
+        console.log("Angle:", angle);
+
+        // Set the gunner's angle to the calculated angle
+        gunner.angle = angle;
+    } else if (event.type === "touchend") {
+        isShooting = false;
+    }
+}
+
+// Add a flag to track if a touch is in progress
+let isTouching = false;
+
+// Event listener for touch start (when you touch the canvas)
+canvas.addEventListener("touchstart", (event) => {
+    event.preventDefault(); // Prevent the default touch event behavior
+    handleTouchEvents(event);
+
+    // Calculate and set the gunner's angle based on the touch coordinates
+    const rect = canvas.getBoundingClientRect();
+    const touchX = event.touches[0].clientX - rect.left;
+    const touchY = event.touches[0].clientY - rect.top;
+    gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
+
+    // Indicate that a touch is in progress
+    isTouching = true;
+});
+
+// Event listener for touch move (when you move your finger on the canvas)
+canvas.addEventListener("touchmove", (event) => {
+    event.preventDefault(); // Prevent the default touch event behavior
+    handleTouchEvents(event);
+
+    // Calculate and update the gunner's angle continuously based on touch coordinates
+    const rect = canvas.getBoundingClientRect();
+    const touchX = event.touches[0].clientX - rect.left;
+    const touchY = event.touches[0].clientY - rect.top;
+    gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
+
+    // If a touch is in progress, enable shooting
+    if (isTouching) {
+        isShooting = true;
+    }
+});
+
+// Event listener for touch end (when you release your finger from the canvas)
+canvas.addEventListener("touchend", (event) => {
+    event.preventDefault(); // Prevent the default touch event behavior
+    handleTouchEvents(event);
+
+    // Indicate that the touch has ended and stop shooting
+    isTouching = false;
+    isShooting = false;
+});
+
+// Prevent default touch events for the entire document
+document.addEventListener("touchstart", (event) => {
+    if (event.target !== canvas) {
+        event.preventDefault();
+    }
+});
+
+document.addEventListener("touchmove", (event) => {
+    if (event.target !== canvas) {
+        event.preventDefault();
+    }
+});
 
 // Start the game loop, which continuously updates the game state and animations
 gameLoop();
