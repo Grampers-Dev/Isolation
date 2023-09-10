@@ -5,17 +5,22 @@ Welcome to the Isolation Jetfighter Shooter website, where you can immerse yours
 ## Table of Contents
 
 - [Isolation - Jetfighter Shooter Website](#isolation---jetfighter-shooter-website)
- [![Header Logo](.assets/images/Header logo.jpg)](#section-header)
+ [![Header Logo](./assets/images/header-logo.jpg)](#section-header)
   - [Table of Contents](#table-of-contents)
   - [Mission Log](#mission-log)
+ [![Mission Log](./assets/images/mission-log.jpg)](#section-missionlog)
   - [How to Play](#how-to-play)
+ [![How to play](./assets/images/how-to-play.jpg)](#section-how-to-play)
     - [Game Controls](#game-controls)
+    [![Game Controls](./assets/images/game-controls.jpg)](#section-game-controls) 
     - [Health and Survival](#health-and-survival)
     - [Mobile and Tablet Controls](#mobile-and-tablet-controls)
   - [Game Instructions](#game-instructions)
   - [Canvas for the Game](#canvas-for-the-game)
+  [![Game Canvas](./assets/images/game-canvas.jpg)](#section-game-canvas) 
   - [Game Elements](#game-elements)
   - [Player Stats and Game Controls](#player-stats-and-game-controls)
+  [![Player Stats](./assets/images/player-stats.jpg)](#section-player-stats)
   - [JavaScript Functionality](#javascript-functionality)
   - [Contact Information](#contact-information)
   - [Credits](#credits)
@@ -146,17 +151,11 @@ I also conducted HTML and CSS validation using the W3C Markup Validation Service
 
 Thank you for choosing my game, and I hope you have a fantastic time playing it!
 
-## Contact Information
-
-If you have any questions, feedback, or suggestions, feel free to contact us:
-
-- Email: [your-email@example.com](mailto:your-email@example.com)
-- Phone: +1 123-456-7890
-
 ## Credits
 
-- Fighter Jet Image: [Image Source](your-image-source-link)
-- Audio Elements: [Sound Source](your-audio-source-link)
-- Enemy Target Image: [Image Source](your-image-source-link)
-- Game Development: [Your Name](your-portfolio-link)
+- Fighter Jet Image: [Image Source](https://www.google.ie/)
+- Background image and Game Canvas [Image Source](https://www.vecteezy.com/)
+- Sound Effects: [Sound Source](https://pixabay.com/)
+- Enemy Target Image: [Image Source](https://www.vecteezy.com/)
+- Game Development: [Graham Walsh](https://grampers-dev.github.io/Isolation/)
 
