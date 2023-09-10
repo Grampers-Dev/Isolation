@@ -5,6 +5,7 @@ Welcome to the Isolation Jetfighter Shooter website, where you can immerse yours
 ## Table of Contents
 
 - [Isolation - Jetfighter Shooter Website](#isolation---jetfighter-shooter-website)
+ [![Header Logo](.assets/images/Header logo.jpg)](#section-header)
   - [Table of Contents](#table-of-contents)
   - [Mission Log](#mission-log)
   - [How to Play](#how-to-play)
