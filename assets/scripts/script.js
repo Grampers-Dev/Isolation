@@ -22,6 +22,7 @@ backgroundMusic.volume = 0.5;
 const instructionsButton = document.querySelector(".instructions-button");
 const instructions = document.querySelector(".instructions");
 let shootingInterval;
+let leaderboard;
 
 // Define a constant for speed increment
 const speedIncrement = 0.5; // Increase speed by 0.5 units every time
@@ -815,65 +816,64 @@ function handleTouchEvents(event) {
 }
 
 
-
 // Add a flag to track if a touch is in progress
 let isTouching = false;
 
 // Prevent default touch events for the entire document except the canvas
 document.addEventListener("touchstart", (event) => {
-  if (event.target !== canvas) {
-    event.preventDefault();
-  }
+    if (event.target !== canvas) {
+        event.preventDefault();
+    }
 });
 
 document.addEventListener("touchmove", (event) => {
-  if (event.target !== canvas) {
-    event.preventDefault();
-  }
+    if (event.target !== canvas) {
+        event.preventDefault();
+    }
 });
 
 // Event listener for touch start (when you touch the canvas)
 canvas.addEventListener("touchstart", (event) => {
-  event.preventDefault(); // Prevent the default touch event behavior
-  handleTouchEvents(event);
-
-  // Calculate and set the gunner's angle based on the touch coordinates
-  const rect = canvas.getBoundingClientRect();
-  const touchX = event.touches[0].clientX - rect.left;
-  const touchY = event.touches[0].clientY - rect.top;
-  gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
-
-  // Indicate that a touch is in progress
-  isTouching = true;
-});
-
-// Event listener for touch move (when you move your finger on the canvas)
-canvas.addEventListener("touchmove", (event) => {
-  event.preventDefault(); // Prevent the default touch event behavior
-
-  // Only handle touch events when a touch is in progress
-  if (isTouching) {
+    event.preventDefault(); // Prevent the default touch event behavior
     handleTouchEvents(event);
 
-    // Calculate and update the gunner's angle continuously based on touch coordinates
+    // Calculate and set the gunner's angle based on the touch coordinates
     const rect = canvas.getBoundingClientRect();
     const touchX = event.touches[0].clientX - rect.left;
     const touchY = event.touches[0].clientY - rect.top;
     gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
 
-    // Enable shooting while touching and moving
-    isShooting = true;
-  }
+    // Indicate that a touch is in progress
+    isTouching = true;
+});
+
+// Event listener for touch move (when you move your finger on the canvas)
+canvas.addEventListener("touchmove", (event) => {
+    event.preventDefault(); // Prevent the default touch event behavior
+
+    // Only handle touch events when a touch is in progress
+    if (isTouching) {
+        handleTouchEvents(event);
+
+        // Calculate and update the gunner's angle continuously based on touch coordinates
+        const rect = canvas.getBoundingClientRect();
+        const touchX = event.touches[0].clientX - rect.left;
+        const touchY = event.touches[0].clientY - rect.top;
+        gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
+
+        // Enable shooting while touching and moving
+        isShooting = true;
+    }
 });
 
 // Event listener for touch end (when you release your finger from the canvas)
 canvas.addEventListener("touchend", (event) => {
-  event.preventDefault(); // Prevent the default touch event behavior
-  handleTouchEvents(event);
+    event.preventDefault(); // Prevent the default touch event behavior
+    handleTouchEvents(event);
 
-  // Indicate that the touch has ended and stop shooting
-  isTouching = false;
-  isShooting = false;
+    // Indicate that the touch has ended and stop shooting
+    isTouching = false;
+    isShooting = false;
 });
 
 

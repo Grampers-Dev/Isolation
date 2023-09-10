@@ -20,7 +20,6 @@ body {
     font-family: Arial, sans-serif;
     color: white;
     font-family: "Black Ops One";
-    /* Apply 'Black Ops One' font */
     max-width: fit-content;
 }
 
@@ -69,8 +68,6 @@ li {
 
 /* Style for the logo */
 .logo {
-    /* font-size: 24px; */
-    /* Commented out font size */
     font-weight: bold;
     text-align: center;
 }
@@ -133,7 +130,6 @@ input.player-name {
     background-color: black;
     color: white;
     font-family: "Black Ops One";
-    /* Apply 'Black Ops One' font */
 }
 
 /* Styling for health and score values */
@@ -212,7 +208,6 @@ button:hover {
     color: white;
     font-size: 16px;
     font-family: "Black Ops One";
-    /* Apply 'Black Ops One' font */
     cursor: pointer;
     border-radius: 5px;
     padding: 10px 15px;
@@ -231,7 +226,6 @@ button:hover {
     color: white;
     font-size: 16px;
     font-family: "Black Ops One";
-    /* Apply 'Black Ops One' font */
     cursor: pointer;
     border-radius: 50%;
     width: 40px;
