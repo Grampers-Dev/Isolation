@@ -106,22 +106,22 @@ While I have identified several issues within the game, it's important to note t
 Here's a summary of my efforts:
 
 1. **Touch Control Issue:**
-   - Despite our best efforts, we encountered difficulties in achieving precise touch control aiming on mobile and tablet devices. While the issue persists, we have documented the relevant code for further examination and potential improvements.
+   - Despite my best efforts, I encountered difficulties in achieving precise touch control aiming on mobile and tablet devices. While the issue persists, I have documented the relevant code for further examination and potential improvements.
 
 2. **Prevent Default Warning:**
-   - We faced challenges in resolving the "preventDefault" warning related to passive event listeners. Although we couldn't eliminate this warning entirely, we have documented the code to provide insights for future development.
+   - I faced challenges in resolving the "preventDefault" warning related to passive event listeners. Although I couldn't eliminate this warning entirely, I have documented the code to provide insights for future development.
 
 3. **Prolonged Touch Input Behavior:**
-   - The unexpected behavior during prolonged touch input remains unresolved. Nevertheless, we have documented the code involved in touch event handling, which may aid in diagnosing and rectifying this issue.
+   - The unexpected behavior during prolonged touch input remains unresolved. Nevertheless, I have documented the code involved in touch event handling, which may aid in diagnosing and rectifying this issue.
 
 4. **Reset Button Functionality:**
-   - The reset button's partial functionality has not been fully resolved. We have documented the code for the reset button, allowing for potential future enhancements.
+   - The reset button's partial functionality has not been fully resolved. I have documented the code for the reset button, allowing for potential future enhancements.
 
 5. **Player Input Name Display:**
-   - Despite our efforts, the issue with player input names not displaying has not been fixed. We have documented the code related to player names, which could assist in finding a solution.
+   - Despite our efforts, the issue with player input names not displaying has not been fixed. I have documented the code related to player names, which could assist in finding a solution.
 
 6. **Endless Shooting Sound:**
-   - The issue of continuous shooting sound after the player's death remains unresolved. We have documented the code related to audio management for reference in future fixes.
+   - The issue of continuous shooting sound after the player's death remains unresolved. I have documented the code related to audio management for reference in future fixes.
 
 My commitment to improving the game experience remains steadfast. I appreciate your understanding and patience as I continue to work on addressing these challenges.
 
