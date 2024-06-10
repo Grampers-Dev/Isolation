@@ -19,6 +19,7 @@ body {
     color: white;
     font-family: "Black Ops One";
     max-width: fit-content;
+    overflow: auto; /* Ensure scrolling is enabled */
 }
 
 /* Define a class for elements with a moving background */
