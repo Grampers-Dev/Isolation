@@ -4,8 +4,6 @@
 /* Styling for the game canvas */
 canvas.game-canvas {
     background-image: url("./images/canvas-background-image-3.jpg");
-    box-shadow: 2px 10px 10px #5f81ec;
-    border-radius: 25px;
     margin: 0 auto;
 }
 
@@ -83,9 +81,7 @@ div.player-stats {
     background-color: black;
     text-align: center;
     color: white;
-    box-shadow: 0px 5px 10px seagreen;
     font-size: 20px;
-    border-radius: 20px;
 }
 
 /* Styling for mission log */
@@ -253,12 +249,177 @@ button:hover {
 
     .game-canvas {
         max-width: 100%;
-        height: auto;
+        height: 250px;
     }
 
     div.player-stats,
     div.mission-log {
         padding: 10px;
-        /* Reduce padding for smaller screens */
+        font-size: 10px;
     }
 }
+
+.game-controller {
+    display: grid;
+    grid-template-columns: repeat(3, 50px);
+    grid-template-rows: repeat(3, 50px);
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 170px; /* Adjust as needed */
+    height: 170px; /* Adjust as needed */
+    margin: auto;
+}
+
+.dpad-button {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.up-button {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.left-button {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.center-button {
+    grid-column: 2;
+    grid-row: 2;
+    background-color: #555; /* Different color for the center button */
+    cursor: default; /* Makes it non-clickable */
+}
+
+.right-button {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.down-button {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    gap: 20px; /* Space between the D-pad and the shoot button */
+}
+
+.game-controller {
+    display: grid;
+    grid-template-columns: repeat(3, 50px);
+    grid-template-rows: repeat(3, 50px);
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 170px; /* Adjust as needed */
+    height: 170px; /* Adjust as needed */
+    margin: auto;
+}
+
+.dpad-button {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.up-button {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.left-button {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.center-button {
+    grid-column: 2;
+    grid-row: 2;
+    background-color: #555; /* Different color for the center button */
+    cursor: default; /* Makes it non-clickable */
+}
+
+.right-button {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.down-button {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.game-button {
+    width: 100px;
+    height: 50px;
+    background-color: #555;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    margin-left: 200px;
+    margin-top: 130px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive design for small screens */
+@media (max-width: 600px) {
+    .game-controller {
+        grid-template-columns: repeat(3, 30px);
+        grid-template-rows: repeat(3, 30px);
+        gap: 5px;
+        width: 110px; /* Adjust as needed */
+        height: 110px; /* Adjust as needed */
+    }
+
+    .dpad-button {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .game-button {
+        width: 70px;
+        height: 50px;
+        margin-left: 130px;
+        margin-top: 70px;
+        font-size: 14px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
