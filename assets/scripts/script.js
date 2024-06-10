@@ -824,27 +824,6 @@ function handleTouchEvents(event) {
   }
 }
 
-// Add global touch event listeners
-let isTouching = false;
-document.addEventListener(
-  "touchstart",
-  (event) => {
-    if (event.target !== canvas) {
-      event.preventDefault();
-    }
-  },
-  { passive: false }
-);
-document.addEventListener(
-  "touchmove",
-  (event) => {
-    if (event.target !== canvas) {
-      event.preventDefault();
-    }
-  },
-  { passive: false }
-);
-
 // Add touch event listeners to the canvas for shooting
 canvas.addEventListener(
   "touchstart",
@@ -880,6 +859,28 @@ canvas.addEventListener(
   },
   { passive: false }
 );
+
+// Add global touch event listeners to prevent default behavior only when interacting with the canvas
+document.addEventListener(
+  "touchstart",
+  (event) => {
+    if (event.target === canvas) {
+      event.preventDefault();
+    }
+  },
+  { passive: false }
+);
+
+document.addEventListener(
+  "touchmove",
+  (event) => {
+    if (event.target === canvas) {
+      event.preventDefault();
+    }
+  },
+  { passive: false }
+);
+
 
 // Function to draw a death message on the canvas
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
