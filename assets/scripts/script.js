@@ -1,68 +1,81 @@
 // DOM element variables
+
+// Get the canvas element and its 2D rendering context
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
 const canvas = document.querySelector(".game-canvas");
 const ctx = canvas.getContext("2d");
+
+// Get the button elements
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
 const startButton = document.querySelector(".start-button");
 const pauseButton = document.querySelector(".pause-button");
 const resetButton = document.querySelector(".reset-button");
 const endButton = document.querySelector(".end-button");
+
+// Get the timer, health, and score display elements
 const timerElement = document.querySelector(".timer");
 const healthElement = document.querySelector(".health");
 const scoreElement = document.querySelector(".score");
+
+// Get the directional control buttons
 const upButton = document.querySelector(".up-button");
 const downButton = document.querySelector(".down-button");
 const leftButton = document.querySelector(".left-button");
 const rightButton = document.querySelector(".right-button");
+
+// Get the shoot button
 const shootButton = document.querySelector(".shoot-button");
+
+// Load the bullet image
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/Image
 const bulletImage = new Image();
-bulletImage.src = "assets/images/player-bullet-image.png"; // Replace with the actual path to your bullet image
+bulletImage.src = "assets/images/player-bullet-image.png";        
+
+// Get the background music and gunshot audio elements
 const backgroundMusic = document.querySelector(".background-music");
-const backgroundMusic2 = document.querySelector(".background-music2"); // Initialize backgroundMusic2
+const backgroundMusic2 = document.querySelector(".background-music2"); 
 const gunshotAudio = document.querySelector(".gunshot-audio");
-backgroundMusic.volume = 0.5;
+
+// Set the volume levels for the background music
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
+backgroundMusic.volume = .5;
+backgroundMusic2.volume = 1;
+
+// Get the instructions button and instructions display elements
 const instructionsButton = document.querySelector(".instructions-button");
 const instructions = document.querySelector(".instructions");
+
+// Initialize the shooting interval and leaderboard variables
 let shootingInterval;
-let leaderboard;
+let leaderboard = [];
+
 
 // Define a constant for speed increment
 const speedIncrement = 0.5; // Increase speed by 0.5 units every time
 
 // Add an event listener to the instructionsButton element
 instructionsButton.addEventListener("click", () => {
-    // Check if the 'instructions' element is currently hidden
     if (instructions.style.display === "none") {
-        // If hidden, display the 'instructions' element and update the button text
         instructions.style.display = "block";
         instructionsButton.textContent = "Hide Instructions";
     } else {
-        // If not hidden, hide the 'instructions' element and update the button text
         instructions.style.display = "none";
         instructionsButton.textContent = "Show Instructions";
     }
 });
 
-// Add an event listener to the startButton element
-startButton.addEventListener("click", () => {
-    // Play background music using the 'backgroundMusic' and 'backgroundMusic2' audio elements
-    backgroundMusic.play();
-    backgroundMusic2.play();
-
-    // Call the 'startGame' function to initiate the game
-    startGame(); // Call your startGame function here
-});
-
-// Attach a click event listener to the reset button
-resetButton.addEventListener("click", () => {
-    resetGame(); // Call the resetGame() function when the reset button is clicked
-});
-
-// Define an object 'gunner' representing a player or character
+// Gunner object representing the player
 const gunner = {
-    x: canvas.width / 2, // Initial x-coordinate at the center of the canvas
+    x: 80, // Initial x-coordinate at the left edge of the canvas
     y: canvas.height / 2, // Initial y-coordinate at the center of the canvas
     speed: 3, // The speed of the gunner character
     angle: 0, // The angle at which the gunner is facing (in degrees)
     health: 100, // The health points of the gunner character
+    movingUp: false,
+    movingDown: false,
+    movingLeft: false, // Added for left movement
+    movingRight: false, // Added for right movement
+    shootingDirection: 0, // 0 for right, 180 for left
 };
 
 // Initialize arrays to store bullets, targets, and enemy bullets
@@ -70,27 +83,31 @@ const bullets = []; // Store bullets fired by the gunner
 const targets = []; // Store targets or enemies
 const enemyBullets = []; // Store bullets fired by enemies
 
-// Create a 'movementKeys' Set to keep track of keys currently pressed for movement
-const movementKeys = new Set();
-
 // Initialize a boolean variable 'isShooting' to track if the gunner is shooting
 let isShooting = false;
 
 // Function to draw the gunner character on the canvas
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
 function drawGunner() {
-    // Save the current canvas state to prevent transformations affecting other elements
+    // Save the current canvas state
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
     ctx.save();
 
-    // Translate the canvas to the gunner's position and rotate it based on the gunner's angle
+    // Move the canvas origin to the gunner's position
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/translate
     ctx.translate(gunner.x, gunner.y);
-    ctx.rotate(gunner.angle);
 
-    // Replace the drawing code with an image of the gunner (fighter jet)
-    const fighterJetImage = document.querySelector(".fighter-jet"); // Get the gunner image
-    const jetWidth = 120; // Adjust the width as needed
-    const jetHeight = 88; // Adjust the height as needed
+    // Rotate the canvas to align with the gunner's shooting direction
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/rotate
+    ctx.rotate(gunner.shootingDirection * (Math.PI / 180));
 
-    // Draw the gunner image centered on the gunner's position and rotated angle
+    // Get the gunner image element from the DOM
+    const fighterJetImage = document.querySelector(".fighter-jet");
+    const jetWidth = 120;
+    const jetHeight = 88;
+
+    // Draw the gunner image centered at the current canvas origin
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
     ctx.drawImage(
         fighterJetImage,
         -jetWidth / 2,  // Center the image horizontally
@@ -99,77 +116,117 @@ function drawGunner() {
         jetHeight       // Height of the image
     );
 
-    // Draw a health bar below the gunner's image to represent their health
-    const healthBarWidth = 50; // Width of the health bar
-    const healthBarHeight = 2; // Height of the health bar
+    // Set the dimensions for the health bar
+    const healthBarWidth = 50;
+    const healthBarHeight = 2;
     const healthBarX = -healthBarWidth / 2; // Center the health bar horizontally
     const healthBarY = jetHeight / 2 + 10;  // Position the health bar below the gunner
-    ctx.fillStyle = "black"; // Set the color of the health bar
+
+    // Set the fill color for the health bar
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle
+    ctx.fillStyle = "black";
+
+    // Draw the health bar representing the gunner's health
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
     ctx.fillRect(
-        healthBarX,                            // X-coordinate of the health bar
-        healthBarY,                            // Y-coordinate of the health bar
-        healthBarWidth * (gunner.health / 100), // Adjust the width based on gunner's health
-        healthBarHeight                        // Height of the health bar
+        healthBarX,
+        healthBarY,
+        healthBarWidth * (gunner.health / 100), // Width proportional to the gunner's health
+        healthBarHeight
     );
 
-    // Restore the canvas state to revert transformations
+    // Restore the canvas state to what it was before the transformations
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
     ctx.restore();
 }
 
+
 // Function to draw bullets on the canvas
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
 function drawBullets() {
-    // Loop through the 'bullets' array and draw each bullet
+    // Iterate through each bullet in the bullets array
     bullets.forEach((bullet) => {
-        ctx.fillStyle = "green"; // Set the fill color to green
+        // Set the fill color to green for player bullets
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle
+        ctx.fillStyle = "green";
+
+        // Begin a new path for the bullet
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/beginPath
         ctx.beginPath();
 
-        // Draw a circular bullet at the specified (x, y) position with a radius of 4 (adjust as needed)
+        // Draw a circle to represent the bullet
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
         ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
 
-        ctx.fill(); // Fill the bullet with the specified color
-        ctx.closePath(); // Close the path for this bullet
+        // Fill the bullet with the specified color
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fill
+        ctx.fill();
+
+        // Close the path for the bullet
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/closePath
+        ctx.closePath();
     });
 
-    // Loop through the 'enemyBullets' array and draw each enemy bullet
+    // Iterate through each bullet in the enemyBullets array
     enemyBullets.forEach((bullet) => {
-        ctx.fillStyle = "red"; // Set the fill color to red
+        // Set the fill color to red for enemy bullets
+        ctx.fillStyle = "red";
+
+        // Begin a new path for the enemy bullet
         ctx.beginPath();
 
-        // Draw a circular enemy bullet at the specified (x, y) position with a radius of 4 (adjust as needed)
+        // Draw a circle to represent the enemy bullet
         ctx.arc(bullet.x, bullet.y, 4, 0, Math.PI * 2);
 
-        ctx.fill(); // Fill the enemy bullet with the specified color
-        ctx.closePath(); // Close the path for this enemy bullet
+        // Fill the enemy bullet with the specified color
+        ctx.fill();
+
+        // Close the path for the enemy bullet
+        ctx.closePath();
     });
 }
+
 
 // Function to draw targets (enemies) on the canvas
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
 function drawTargets() {
-    // Get the target image element from the HTML document
+    // Get the target image element from the DOM
     const targetImage = document.querySelector(".target-image");
 
-    // Loop through the 'targets' array and draw each target
+    // Iterate through each target in the targets array
     targets.forEach((target) => {
-        ctx.save(); // Save the current canvas state to prevent transformations affecting other elements
-        ctx.translate(target.x, target.y); // Translate the canvas to the target's position
-        ctx.rotate(target.angle); // Apply rotation angle to the target
+        // Save the current canvas state
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save
+        ctx.save();
 
-        // Replace the drawing code with an image of the target
-        const targetWidth = 80; // Adjust the width of the target image as needed
-        const targetHeight = 48; // Adjust the height of the target image as needed
+        // Move the canvas origin to the target's position
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/translate
+        ctx.translate(target.x, target.y);
 
-        // Draw the target image centered on the target's position and rotated based on its angle
+        // Rotate the canvas to align with the target's angle
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/rotate
+        ctx.rotate(target.angle);
+
+        // Set the dimensions for the target image
+        const targetWidth = 80;
+        const targetHeight = 48;
+
+        // Draw the target image centered at the current canvas origin
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
         ctx.drawImage(
-            targetImage,             // The target image element
-            -targetWidth / 2,        // Center the image horizontally
-            -targetHeight / 2,       // Center the image vertically
-            targetWidth,             // Width of the image
-            targetHeight             // Height of the image
+            targetImage,
+            -targetWidth / 2,  // Center the image horizontally
+            -targetHeight / 2, // Center the image vertically
+            targetWidth,       // Width of the image
+            targetHeight       // Height of the image
         );
 
-        ctx.restore(); // Restore the canvas state to revert transformations
+        // Restore the canvas state to what it was before the transformations
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/restore
+        ctx.restore();
     });
 }
+
 
 // Function to clear the entire canvas
 function clearCanvas() {
@@ -178,55 +235,76 @@ function clearCanvas() {
 
 // Function to update the game state and perform various game-related tasks
 function update() {
-    clearCanvas(); // Clear the canvas to prepare for rendering the updated game state
-    handleInput(); // Handle player input (e.g., movement and shooting)
-    drawGunner(); // Draw the gunner character on the canvas
-    drawBullets(); // Draw bullets fired by the gunner
+    // Clear the canvas to prepare for the new frame
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
+    clearCanvas();
 
-    // Update the positions of player bullets based on their angles and speeds
+    // Handle user input for character movement and actions
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+    handleInput();
+
+    // Draw the gunner character on the canvas
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+    drawGunner();
+
+    // Draw all bullets fired by the player and enemies
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc
+    drawBullets();
+
+    // Update the position of each bullet based on its speed and direction
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/cos
     bullets.forEach((bullet) => {
         const bulletDirection = {
-            x: Math.cos(bullet.angle), // Calculate x-component of the bullet's direction
-            y: Math.sin(bullet.angle), // Calculate y-component of the bullet's direction
+            x: Math.cos(bullet.angle),
+            y: Math.sin(bullet.angle),
         };
 
-        // Update the bullet's position based on its speed and direction
+        // Move the bullet along its trajectory
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
         bullet.x += bullet.speed * bulletDirection.x;
         bullet.y += bullet.speed * bulletDirection.y;
     });
 
-    // Update the positions of enemy bullets based on their angles and speeds
+    // Update the position of each enemy bullet
     enemyBullets.forEach((bullet) => {
-        bullet.x += bullet.speed * Math.cos(bullet.angle); // Update x-coordinate
-        bullet.y += bullet.speed * Math.sin(bullet.angle); // Update y-coordinate
+        bullet.x += bullet.speed * Math.cos(bullet.angle);
+        bullet.y += bullet.speed * Math.sin(bullet.angle);
     });
 
-    // Update the positions of targets (enemies) and handle their interactions with the gunner
+    // Update the position and angle of each target (enemy)
     targets.forEach((target) => {
-        const dx = gunner.x - target.x; // Calculate the horizontal distance between gunner and target
-        const dy = gunner.y - target.y; // Calculate the vertical distance between gunner and target
+        const dx = gunner.x - target.x;
+        const dy = gunner.y - target.y;
         const distance = Math.sqrt(dx * dx + dy * dy); // Calculate the distance between gunner and target
-        const angleToGunner = Math.atan2(dy, dx); // Calculate the angle from the target to the gunner
+        const angleToGunner = Math.atan2(dy, dx); // Calculate the angle to the gunner
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
 
-        // Rotate the target to face the gunner
-        target.angle = angleToGunner;
+        target.angle = angleToGunner; // Rotate the target to face the gunner
 
-        // Move the target along its own direction
+        // Move the target towards the gunner
         target.x += target.speed * Math.cos(target.angle);
         target.y += target.speed * Math.sin(target.angle);
 
-        // If the target gets too close to the gunner, damage the gunner's health
+        // Keep target within canvas bounds
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
+        target.x = Math.max(0, Math.min(canvas.width, target.x));
+        target.y = Math.max(0, Math.min(canvas.height, target.y));
+
+        // Check for collision with the gunner
         if (distance < 15) {
-            gunner.health -= 2; // Reduce gunner's health by 2 points
+            gunner.health -= 2; // Reduce gunner's health
             healthElement.textContent = `Health: ${gunner.health}%`; // Update health display
             if (gunner.health <= 0) {
-                endGame(); // End the game if the gunner's health reaches zero or below
+                endGame(); // End the game if gunner's health reaches zero
             }
         }
     });
 
-    drawTargets(); // Draw the targets (enemies) on the canvas
-    handleCollisions(); // Handle collisions between bullets and targets
+    // Draw all targets (enemies) on the canvas
+    drawTargets();
+
+    // Handle collisions between bullets and targets
+    handleCollisions();
 
     // Check if the game is over and the gunner's health is depleted
     if (isGameOver && gunner.health <= 0) {
@@ -236,74 +314,70 @@ function update() {
     }
 }
 
+
 // Function to handle player input for character movement and aiming
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
 function handleInput() {
-    // Check if the gunner character is moving upward
-    if (gunner.movingUp) {
-        gunner.y -= gunner.speed; // Move the gunner's y-coordinate upwards
+    // Move gunner up if 'movingUp' flag is set and gunner is within canvas bounds
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
+    if (gunner.movingUp && gunner.y - gunner.speed > 0) {
+        gunner.y -= gunner.speed;
     }
 
-    // Check if the gunner character is moving downward
-    if (gunner.movingDown) {
-        gunner.y += gunner.speed; // Move the gunner's y-coordinate downwards
+    // Move gunner down if 'movingDown' flag is set and gunner is within canvas bounds
+    if (gunner.movingDown && gunner.y + gunner.speed < canvas.height) {
+        gunner.y += gunner.speed;
     }
 
-    // Check if the gunner character is moving leftward
-    if (gunner.movingLeft) {
-        gunner.x -= gunner.speed; // Move the gunner's x-coordinate to the left
+    // Move gunner left if 'movingLeft' flag is set and gunner is within canvas bounds
+    if (gunner.movingLeft && gunner.x - gunner.speed > 0) {
+        gunner.x -= gunner.speed;
     }
 
-    // Check if the gunner character is moving rightward
-    if (gunner.movingRight) {
-        gunner.x += gunner.speed; // Move the gunner's x-coordinate to the right
+    // Move gunner right if 'movingRight' flag is set and gunner is within canvas bounds
+    if (gunner.movingRight && gunner.x + gunner.speed < canvas.width) {
+        gunner.x += gunner.speed;
     }
-
-    // Calculate the angle at which the gunner character is aiming based on the mouse position
-    const dx = mouse.x - gunner.x; // Calculate the horizontal distance between mouse and gunner
-    const dy = mouse.y - gunner.y; // Calculate the vertical distance between mouse and gunner
-    gunner.angle = Math.atan2(dy, dx); // Calculate the angle in radians using arctangent
 }
 
 // Function to handle collisions between bullets and targets, and between enemy bullets and the gunner
+// Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+// Additional Reference: https://gamedevelopment.tutsplus.com/tutorials/quick-tip-collision-detection-with-the-separating-axis-theorem--gamedev-169
 function handleCollisions() {
-    // Iterate through all player bullets and targets to check for collisions
+    // Check for collisions between player bullets and targets
     bullets.forEach((bullet, bulletIndex) => {
         targets.forEach((target, targetIndex) => {
-            // Check if the bullet is within a close range of the target (collided)
+            // Simple bounding box collision detection
             if (
                 bullet.x > target.x - 15 &&
                 bullet.x < target.x + 15 &&
                 bullet.y > target.y - 15 &&
                 bullet.y < target.y + 15
             ) {
-                // Remove the collided bullet and target from their respective arrays
+                // Remove the bullet and target from their respective arrays
                 bullets.splice(bulletIndex, 1);
                 targets.splice(targetIndex, 1);
 
-                // Increase the player's score when a target is hit
+                // Increase score when a target is hit
                 score += 10;
-                scoreElement.textContent = `Score: ${score}`; // Update the score display
+                scoreElement.textContent = `Score: ${score}`;
             }
         });
     });
 
-    // Iterate through all enemy bullets to check for collisions with the gunner
+    // Check for collisions between enemy bullets and the gunner
     enemyBullets.forEach((bullet, bulletIndex) => {
-        // Calculate the distance between the gunner and the enemy bullet
         const dx = gunner.x - bullet.x;
         const dy = gunner.y - bullet.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distance = Math.sqrt(dx * dx + dy * dy); // Calculate distance between gunner and bullet
 
-        // Check if the enemy bullet is within a close range of the gunner (collided)
+        // If distance is less than threshold, a collision occurred
         if (distance < 5) {
-            // Reduce the gunner's health and update the health display
-            gunner.health -= 10;
+            gunner.health -= 10; // Decrease gunner's health
             healthElement.textContent = `Health: ${gunner.health}%`;
+            enemyBullets.splice(bulletIndex, 1); // Remove the enemy bullet
 
-            // Remove the collided enemy bullet from the array
-            enemyBullets.splice(bulletIndex, 1);
-
-            // Check if the gunner's health has reached zero or below, and end the game if so
+            // End game if gunner's health is zero or less
             if (gunner.health <= 0) {
                 endGame();
             }
@@ -311,573 +385,561 @@ function handleCollisions() {
     });
 }
 
+
+// Function to handle collisions between bullets and targets, and between enemy bullets and the gunner
+function handleCollisions() {
+    // Iterate through each bullet in the bullets array
+    // Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+    bullets.forEach((bullet, bulletIndex) => {
+        // Iterate through each target in the targets array
+        targets.forEach((target, targetIndex) => {
+            // Simple bounding box collision detection
+            // Reference: https://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
+            if (
+                bullet.x > target.x - 15 && // Check if bullet's x position is within target's x bounds
+                bullet.x < target.x + 15 &&
+                bullet.y > target.y - 15 && // Check if bullet's y position is within target's y bounds
+                bullet.y < target.y + 15
+            ) {
+                // Remove the bullet and target from their respective arrays
+                // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+                bullets.splice(bulletIndex, 1);
+                targets.splice(targetIndex, 1);
+
+                // Increase score when a target is hit
+                score += 10;
+                scoreElement.textContent = `Score: ${score}`;
+            }
+        });
+    });
+
+    // Iterate through each bullet in the enemyBullets array
+    enemyBullets.forEach((bullet, bulletIndex) => {
+        // Calculate distance between the gunner and the bullet
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
+        const dx = gunner.x - bullet.x;
+        const dy = gunner.y - bullet.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // If distance is less than threshold, a collision occurred
+        // Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+        if (distance < 5) {
+            gunner.health -= 10; // Decrease gunner's health
+            healthElement.textContent = `Health: ${gunner.health}%`;
+            enemyBullets.splice(bulletIndex, 1); // Remove the enemy bullet
+
+            // End game if gunner's health is zero or less
+            if (gunner.health <= 0) {
+                endGame();
+            }
+        }
+    });
+}
+
+
 // Function that serves as the game loop responsible for updating the game and rendering frames
 function gameLoop() {
-    // Check if the game is not paused and the game is not over
     if (!isPaused && !isGameOver) {
-        // Call the 'update' function to update the game state
         update();
-
-        // Iterate through all targets to simulate enemy shooting with a certain probability
         targets.forEach((target) => {
-            // Randomly determine if the target should shoot (approx. 1% chance per frame)
             if (Math.random() < 0.01) {
-                shootTargetBullet(target); // Call a function to make the target shoot a bullet
+                shootTargetBullet(target);
             }
         });
     }
-
-    // Request the next animation frame to continue the game loop
     requestAnimationFrame(gameLoop);
 }
 
 // Declaration of game-related variables
+let gameInterval;
+let startTime;
+let remainingTime = 120;
+let isPaused = false;
+let isGameOver = false;
+let score = 0;
+let gameIsRunning = false; // Added this to track the game running state
 
-let gameInterval;     // Variable to store the game loop interval
-let startTime;        // Variable to store the start time of the game
-let remainingTime = 120; // Variable to store the remaining game time (in seconds)
-let isPaused = false; // Variable to track whether the game is currently paused
-let isGameOver = false; // Variable to track whether the game is over
-let score = 0;        // Variable to keep track of the player's score
-
-// Update the score display element with the initial score value
 scoreElement.textContent = `Score: ${score}`;
 
 // Function to update the game timer and check for game over conditions
 function updateTimer() {
-    // Check if the game is not paused and the game is not over
     if (!isPaused && !isGameOver) {
-        // Get the current time in milliseconds
+        // Get the current time in milliseconds since the epoch
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
         const currentTime = new Date().getTime();
 
-        // Calculate the elapsed time since the last update and convert it to seconds
+        // Calculate the elapsed time in seconds
         const elapsedTime = (currentTime - startTime) / 1000;
 
-        // Update the remaining game time while ensuring it doesn't go below zero
+        // Update the remaining game time, ensuring it doesn't go below zero
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max
         remainingTime = Math.max(0, remainingTime - elapsedTime);
 
-        // Check if the game has ended due to running out of time or the gunner's health
+        // Check if the game should end due to time running out or the gunner's health reaching zero
+        // Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
         if (remainingTime <= 0 || gunner.health <= 0) {
-            endGame(); // Call the endGame function to handle game over
+            endGame();
         }
 
         // Calculate minutes and seconds from the remaining time
         const minutes = Math.floor(remainingTime / 60);
         const seconds = Math.floor(remainingTime % 60);
 
-        // Format the time in MM:SS format with leading zeros
-        const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
-            seconds
-        ).padStart(2, "0")}`;
+        // Format the time as MM:SS with leading zeros if needed
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
+        const formattedTime = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
         // Update the timer display element with the formatted time
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
         timerElement.textContent = `Time left: ${formattedTime}`;
 
-        // Update the start time to the current time for the next iteration
+        // Update the start time for the next calculation
         startTime = currentTime;
     }
 }
 
+
 // Event listener for the "Start" button click
 startButton.addEventListener("click", () => {
-    // Check if the game interval is not already running
     if (!gameInterval) {
-        resetGame(); // Reset the game state (additional function call)
-        startGame(); // Start the game
+        resetGame();
+        startGame();
     }
 });
 
 // Event listener for the "Pause" button click
 pauseButton.addEventListener("click", () => {
-    // Toggle the game's pause state (paused or resumed)
     isPaused = !isPaused;
-
-    // Update the button text to reflect the current pause state
-    if (isPaused) {
-        pauseButton.textContent = "Resume"; // Set button text to "Resume" when paused
-    } else {
-        pauseButton.textContent = "Pause"; // Set button text to "Pause" when resumed
-    }
+    pauseButton.textContent = isPaused ? "Resume" : "Pause";
 });
 
 // Event listener for the "End" button click
 endButton.addEventListener("click", () => {
-    endGame(); // Call the endGame function to end the game
+    endGame();
 });
 
 // Function to start the game and initialize game elements
 function startGame() {
-    // Get references to relevant HTML elements
-    const startButton = document.querySelector(".start-button");
+    // Get player name input and display elements
     const playerNameInput = document.querySelector(".player-name");
     const playerNameDisplay = document.querySelector(".player-name-display");
-
-    // Get the trimmed player name from the input field
     const playerName = playerNameInput.value.trim();
 
-    // Check if a valid player name is provided (not empty)
+    // Check if the player name is not empty
+    // Reference: https://www.w3schools.com/jsref/prop_text_value.asp
     if (playerName !== "") {
-        // Hide the input field and display the player's name
+        // Hide the player name input and display the player name
         playerNameInput.style.display = "none";
         playerNameDisplay.textContent = `Player: ${playerName}`;
-        playerNameDisplay.style.display = "inline"; // Show the name display
+        playerNameDisplay.style.display = "inline";
 
-        // Start shooting at regular intervals
+        // Set up the shooting interval to call the shoot function every 100 milliseconds
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
         shootingInterval = setInterval(shoot, 100);
 
         // Hide the start button and display the game canvas
         startButton.style.display = "none";
         canvas.style.display = "block";
 
-        // Reset the game state
-        resetGame();
-
-        // Call the function to periodically spawn targets after the game starts
-        setInterval(spawnTargets, 1000);
-
-        // Disable the start button and initialize game timers
-        startButton.disabled = true;
+        // Initialize the game start time
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
         startTime = new Date().getTime();
+
+        // Set up the game interval to call the updateTimer function every second
         gameInterval = setInterval(updateTimer, 1000);
 
-        // Start the game loop for continuous updates and rendering
+        // Set up the interval to spawn targets every second
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+        setInterval(spawnTargets, 1000); 
+
+        // Set the game running state to true
+        gameIsRunning = true;
+
+        // Start the game loop
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
         gameLoop();
 
-        // Play the background music
-        backgroundMusic.play();
+        // Play background music with error handling
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+        backgroundMusic.play().catch(error => {
+            console.error('Background music play failed:', error);
+        });
+        
+        backgroundMusic2.play().catch(error => {
+            console.error('Background music 2 play failed:', error);
+        });
     }
 }
 
+
 // Function to handle game ending and cleanup
 function endGame() {
-    // Clear the game interval to stop continuous updates
+    // Clear the game interval to stop the timer
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
     clearInterval(gameInterval);
 
-    // Mark the game as over
+    // Set the game over flag to true
     isGameOver = true;
 
-    // Enable the "Start" button and disable the "Pause" and "End" buttons
+    // Enable the start button and disable the pause and end buttons
     startButton.disabled = false;
     pauseButton.disabled = true;
     endButton.disabled = true;
 
-    // Pause or stop background music and sound effects
+    // Pause the background music and reset its playback position
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
     backgroundMusic.pause();
-    backgroundMusic.currentTime = 0; // Reset audio to the beginning
+    backgroundMusic.currentTime = 0;
     backgroundMusic2.pause();
     backgroundMusic2.currentTime = 0;
 
-    // Retrieve the player's name from the input field
+    // Get the player's name from the input field
+    // Reference: https://www.w3schools.com/jsref/prop_text_value.asp
     const playerName = document.querySelector(".player-name").value;
 
-    // Create a player stats object with name, score, and remaining time
+    // Create a player stats object with the player's name, score, and remaining time
     const playerStats = {
         name: playerName,
         score: score,
         time: remainingTime,
     };
 
-    // Add the player's stats to the leaderboard array
+    // Add the player stats to the leaderboard array
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
     leaderboard.push(playerStats);
 
-    // Clear the shooting interval
+    // Clear the shooting interval to stop the player from shooting
     clearInterval(shootingInterval);
 
-    // Check if the game ended due to the gunner's health reaching zero
+    // Check if the gunner's health is zero or less
     if (gunner.health <= 0) {
-        clearCanvas(); // Clear the game canvas
-        drawDeathMessage(); // Display a message indicating the game over condition
+        // Clear the canvas and draw the death message
+        clearCanvas();
+        drawDeathMessage();
     }
 }
 
+
 // Function to reset the game state and prepare for a new game
 function resetGame() {
-    // Reset the gunner's position to the center of the canvas and health to 100%
-    gunner.x = canvas.width / 2;
+    // Reset the gunner's position to the left edge of the canvas and center vertically
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage
+    gunner.x = 0; 
     gunner.y = canvas.height / 2;
-    gunner.health = 100;
 
-    // Update the health display element with the new health value
+    // Reset the gunner's health to 100%
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
+    gunner.health = 100;
     healthElement.textContent = `Health: ${gunner.health}%`;
 
-    // Clear the arrays for bullets, targets, and enemy bullets
+    // Clear the arrays storing bullets and targets
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length
     bullets.length = 0;
     targets.length = 0;
     enemyBullets.length = 0;
 
-    // Reset the remaining game time, pause and game over states
+    // Reset the remaining time, pause state, and game over state
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
     remainingTime = 120;
     isPaused = false;
     isGameOver = false;
 
-    // Reset the "Pause" button text to "Pause"
+    // Reset the pause button text to "Pause"
     pauseButton.textContent = "Pause";
 
-    // Reset the player's score to 0 and update the score display element
+    // Reset the player's score to 0 and update the score display
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
     score = 0;
     scoreElement.textContent = `Score: ${score}`;
 
     // Reset the game's start time
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
     startTime = new Date().getTime();
 
-    // Clear the game canvas
+    // Clear the canvas
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
     clearCanvas();
 
-    // Hide any displayed death message by clearing the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Enable the "Start," "Pause," and "End" buttons
+    // Enable the start, pause, and end buttons
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/disabled
     startButton.disabled = false;
     pauseButton.disabled = false;
     endButton.disabled = false;
 
-    // Reset the player's name display and show the input field
+    // Reset the player name input and display elements
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
     const playerNameInput = document.querySelector(".player-name");
     const playerNameDisplay = document.querySelector(".player-name-display");
     playerNameInput.style.display = "inline";
-    playerNameInput.value = ""; // Clear the input value
+    playerNameInput.value = "";
     playerNameDisplay.style.display = "none";
     playerNameDisplay.textContent = "";
 
-    // Stop and reset background music
+    // Pause and reset the background music
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
     backgroundMusic.pause();
     backgroundMusic.currentTime = 0;
     backgroundMusic2.pause();
     backgroundMusic2.currentTime = 0;
-
-    // Reset the leaderboard
-    leaderboard = [];
-
-    // Resume the game loop if it was paused
-    if (!gameInterval) {
-        startTime = new Date().getTime();
-        gameInterval = setInterval(updateTimer, 1000);
-        gameLoop();
-    }
 }
 
-// Object to store mouse coordinates
-const mouse = {
-    x: 0,
-    y: 0,
-};
-
-// Event listener to track mouse movement within the game canvas
-canvas.addEventListener("mousemove", (event) => {
-    // Get the canvas's position relative to the viewport
-    const rect = canvas.getBoundingClientRect();
-
-    // Update the mouse object with the current mouse coordinates
-    mouse.x = event.clientX - rect.left;
-    mouse.y = event.clientY - rect.top;
-});
-
 // Event listener to handle keyboard keydown events
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event
 window.addEventListener("keydown", (event) => {
     if (event.key === "w") {
-        gunner.movingUp = true; // Set gunner's upward movement flag to true
+        // Move gunner up when 'w' key is pressed
+        gunner.movingUp = true;
     } else if (event.key === "s") {
-        gunner.movingDown = true; // Set gunner's downward movement flag to true
+        // Move gunner down when 's' key is pressed
+        gunner.movingDown = true;
     } else if (event.key === "a") {
-        gunner.movingLeft = true; // Set gunner's leftward movement flag to true
+        // Move gunner left when 'a' key is pressed
+        gunner.movingLeft = true;
     } else if (event.key === "d") {
-        gunner.movingRight = true; // Set gunner's rightward movement flag to true
+        // Move gunner right when 'd' key is pressed
+        gunner.movingRight = true;
     } else if (event.key === " ") {
-        // Space bar pressed, initiate shooting
-        isShooting = true; // Set the shooting flag to true
+        // Start shooting when spacebar is pressed
+        isShooting = true;
     }
 });
 
 // Event listener to handle keyboard keyup events
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/keyup_event
 window.addEventListener("keyup", (event) => {
     if (event.key === "w") {
-        gunner.movingUp = false; // Set gunner's upward movement flag to false
+        // Stop moving gunner up when 'w' key is released
+        gunner.movingUp = false;
     } else if (event.key === "s") {
-        gunner.movingDown = false; // Set gunner's downward movement flag to false
+        // Stop moving gunner down when 's' key is released
+        gunner.movingDown = false;
     } else if (event.key === "a") {
-        gunner.movingLeft = false; // Set gunner's leftward movement flag to false
+        // Stop moving gunner left when 'a' key is released
+        gunner.movingLeft = false;
     } else if (event.key === "d") {
-        gunner.movingRight = false; // Set gunner's rightward movement flag to false
+        // Stop moving gunner right when 'd' key is released
+        gunner.movingRight = false;
     } else if (event.key === " ") {
-        // Space bar released, stop shooting
-        isShooting = false; // Set the shooting flag to false
+        // Stop shooting when spacebar is released
+        isShooting = false;
     }
 });
 
 // Event listeners for touch controls on buttons (touchstart)
-document.querySelector(".up-button").addEventListener("touchstart", () => {
-    gunner.movingUp = true; // Set gunner's upward movement flag to true
-});
-
-document.querySelector(".down-button").addEventListener("touchstart", () => {
-    gunner.movingDown = true; // Set gunner's downward movement flag to true
-});
-
-document.querySelector(".left-button").addEventListener("touchstart", () => {
-    gunner.movingLeft = true; // Set gunner's leftward movement flag to true
-});
-
-document.querySelector(".right-button").addEventListener("touchstart", () => {
-    gunner.movingRight = true; // Set gunner's rightward movement flag to true
-});
-
-document.querySelector(".shoot-button").addEventListener("touchstart", () => {
-    // Space bar pressed, initiate shooting
-    isShooting = true; // Set the shooting flag to true
-});
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
+upButton.addEventListener("touchstart", () => {
+    gunner.movingUp = true;
+}, { passive: false });
+downButton.addEventListener("touchstart", () => {
+    gunner.movingDown = true;
+}, { passive: false });
+leftButton.addEventListener("touchstart", () => {
+    gunner.movingLeft = true;
+}, { passive: false });
+rightButton.addEventListener("touchstart", () => {
+    gunner.movingRight = true;
+}, { passive: false });
+shootButton.addEventListener("touchstart", () => {
+    isShooting = true;
+}, { passive: false });
 
 // Event listeners for touch controls on buttons (touchend)
-document.querySelector(".up-button").addEventListener("touchend", () => {
-    gunner.movingUp = false; // Set gunner's upward movement flag to false
-});
+upButton.addEventListener("touchend", () => {
+    gunner.movingUp = false;
+}, { passive: false });
+downButton.addEventListener("touchend", () => {
+    gunner.movingDown = false;
+}, { passive: false });
+leftButton.addEventListener("touchend", () => {
+    gunner.movingLeft = false;
+}, { passive: false });
+rightButton.addEventListener("touchend", () => {
+    gunner.movingRight = false;
+}, { passive: false });
+shootButton.addEventListener("touchend", () => {
+    isShooting = false;
+}, { passive: false });
 
-document.querySelector(".down-button").addEventListener("touchend", () => {
-    gunner.movingDown = false; // Set gunner's downward movement flag to false
-});
-
-document.querySelector(".left-button").addEventListener("touchend", () => {
-    gunner.movingLeft = false; // Set gunner's leftward movement flag to false
-});
-
-document.querySelector(".right-button").addEventListener("touchend", () => {
-    gunner.movingRight = false; // Set gunner's rightward movement flag to false
-});
-
-document.querySelector(".shoot-button").addEventListener("touchend", () => {
-    // Space bar released, stop shooting
-    isShooting = false; // Set the shooting flag to false
-});
-
-// Handle mousemove event (if needed)
-canvas.addEventListener("mousemove", (event) => {
-    // Get the canvas's position relative to the viewport
-    const rect = canvas.getBoundingClientRect();
-
-    // Update the mouse object with the current mouse coordinates
-    mouse.x = event.clientX - rect.left;
-    mouse.y = event.clientY - rect.top;
-});
-
-// Handle keyboard events (if needed)
-window.addEventListener("keydown", (event) => {
-    if (event.key === "w") {
-        gunner.movingUp = true; // Set gunner's upward movement flag to true
-    } else if (event.key === "s") {
-        gunner.movingDown = true; // Set gunner's downward movement flag to true
-    } else if (event.key === "a") {
-        gunner.movingLeft = true; // Set gunner's leftward movement flag to true
-    } else if (event.key === "d") {
-        gunner.movingRight = true; // Set gunner's rightward movement flag to true
-    } else if (event.key === " ") {
-        // Space bar pressed, initiate shooting
-        isShooting = true; // Set the shooting flag to true
-    }
-});
-
-// Handle keyboard keyup events (if needed)
-window.addEventListener("keyup", (event) => {
-    if (event.key === "w") {
-        gunner.movingUp = false; // Set gunner's upward movement flag to false
-    } else if (event.key === "s") {
-        gunner.movingDown = false; // Set gunner's downward movement flag to false
-    } else if (event.key === "a") {
-        gunner.movingLeft = false; // Set gunner's leftward movement flag to false
-    } else if (event.key === "d") {
-        gunner.movingRight = false; // Set gunner's rightward movement flag to false
-    } else if (event.key === " ") {
-        // Space bar released, stop shooting
-        isShooting = false; // Set the shooting flag to false
-    }
-});
-
-// Function to draw a death message on the canvas
-function drawDeathMessage() {
-    ctx.fillStyle = "red"; // Set the fill color to red for the death message
-    ctx.font = "40px 'Black Ops One', sans-serif"; // Set the font and size
-    ctx.textAlign = "center"; // Center-align the text
-    ctx.fillText("You Died!", canvas.width / 2, canvas.height / 2); // Draw the death message in the center of the canvas
-}
-
-// Define a variable to keep track of whether the gunshot sound is currently playing
-let isGunshotPlaying = false;
-
-// Function to handle shooting action
-function shoot() {
-    if (isGameOver) {
-        return; // Stop shooting when the game is over
-    }
-
-    if (isShooting) {
-        if (!isGunshotPlaying) {
-            gunshotAudio.currentTime = 0; // Reset the gunshot audio to the beginning
-            gunshotAudio.play(); // Play the gunshot sound
-            isGunshotPlaying = true; // Set the flag to indicate that the gunshot sound is playing
-        }
-
-        // Create a bullet object with its initial position, speed, and angle
-        const bullet = {
-            x: gunner.x,
-            y: gunner.y,
-            speed: 6, // Bullet's movement speed
-            angle: Math.atan2(mouse.y - gunner.y, mouse.x - gunner.x), // Calculate the angle towards the mouse cursor
-        };
-
-        bullets.push(bullet); // Add the bullet to the bullets array
-    } else {
-        isGunshotPlaying = false; // Set the flag to indicate that the gunshot sound has stopped playing
-        gunshotAudio.pause(); // Pause the gunshot sound
-    }
-}
-
-// Function to shoot a bullet from an enemy target towards the player's position
-function shootTargetBullet(target) {
-    // Calculate the angle from the target to the player's position
-    const angle = Math.atan2(gunner.y - target.y, gunner.x - target.x);
-
-    // Create a bullet object for the enemy target with its initial position, speed, and angle
-    const bullet = {
-        x: target.x,
-        y: target.y,
-        speed: 4.5, // Bullet's movement speed
-        angle: angle, // Angle towards the player's position
-    };
-
-    enemyBullets.push(bullet); // Add the bullet to the enemyBullets array
-
-    // Play the target gunfire sound
-    const targetGunshotAudio = document.querySelector(".target-gunshot-audio");
-    targetGunshotAudio.currentTime = 0; // Reset the target gunfire audio to the beginning
-    targetGunshotAudio.play(); // Play the target gunfire sound
-}
-
-// Initialize a variable to track whether the game is running
-let gameIsRunning = false;
-
-// Function to spawn enemy targets on the canvas
-function spawnTargets() {
-    // Get the height of the canvas
-    const canvasHeight = canvas.height;
-
-    // Generate a random Y-coordinate for the target within the canvas height
-    const targetY = Math.random() * canvasHeight;
-
-    // Get the current time to calculate elapsed time and intervals
-    const currentTime = new Date().getTime();
-    const elapsedTime = (currentTime - startTime) / 1000;
-
-    // Calculate elapsed intervals (e.g., every 1 second)
-    const elapsedIntervals = Math.floor(elapsedTime / 1);
-
-    // Calculate the speed of the target with randomness and increment
-    const targetSpeed =
-        Math.random() * (1 + speedIncrement * elapsedIntervals) + 1;
-
-    // Create a target object with its initial position, speed, and angle towards the player
-    const target = {
-        x: canvas.width, // Initial X-coordinate outside the canvas
-        y: targetY, // Random Y-coordinate within the canvas height
-        speed: targetSpeed, // Randomized target speed
-        angle: Math.atan2(gunner.y - targetY, gunner.x - canvas.width), // Angle towards the player's position
-    };
-
-    targets.push(target); // Add the target to the targets array
-
-    // Check if the game is running and randomly trigger shooting from the spawned target
-    if (gameIsRunning && Math.random() < 0.01) {
-        shootTargetBullet(target); // Call the shooting function for the spawned target
-    }
-}
-
-// Set an interval to call the 'shoot' function repeatedly every 100 milliseconds
-setInterval(shoot, 100); // Adjust the shooting interval as needed
-
-
+// Function to handle touch events for shooting
 function handleTouchEvents(event) {
-    event.preventDefault(); // Prevent the default touch event behavior
+    event.preventDefault(); // Prevent default touch behavior
     const rect = canvas.getBoundingClientRect();
 
     if (event.type === "touchstart" || event.type === "touchmove") {
-        isShooting = true;
-
-        // Calculate the angle between the gunner and touch point
         const touchX = event.touches[0].clientX - rect.left;
         const touchY = event.touches[0].clientY - rect.top;
 
-        // Calculate the angle from the gunner's position to the touch point
-        const deltaX = touchX - gunner.x;
-        const deltaY = touchY - gunner.y;
-        const angle = Math.atan2(deltaY, deltaX);
-
-        // Set the gunner's angle to the calculated angle
-        gunner.angle = angle;
+        isShooting = true;
     } else if (event.type === "touchend") {
         isShooting = false;
     }
 }
 
-
-// Add a flag to track if a touch is in progress
+// Add global touch event listeners
 let isTouching = false;
-
-// Prevent default touch events for the entire document except the canvas
 document.addEventListener("touchstart", (event) => {
     if (event.target !== canvas) {
         event.preventDefault();
     }
-});
-
+}, { passive: false });
 document.addEventListener("touchmove", (event) => {
     if (event.target !== canvas) {
         event.preventDefault();
     }
-});
+}, { passive: false });
 
-// Event listener for touch start (when you touch the canvas)
+// Add touch event listeners to the canvas for shooting
 canvas.addEventListener("touchstart", (event) => {
-    event.preventDefault(); // Prevent the default touch event behavior
+    event.preventDefault();
     handleTouchEvents(event);
-
-    // Calculate and set the gunner's angle based on the touch coordinates
-    const rect = canvas.getBoundingClientRect();
-    const touchX = event.touches[0].clientX - rect.left;
-    const touchY = event.touches[0].clientY - rect.top;
-    gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
-
-    // Indicate that a touch is in progress
     isTouching = true;
-});
+}, { passive: false });
 
-// Event listener for touch move (when you move your finger on the canvas)
 canvas.addEventListener("touchmove", (event) => {
-    event.preventDefault(); // Prevent the default touch event behavior
+    event.preventDefault();
 
-    // Only handle touch events when a touch is in progress
     if (isTouching) {
         handleTouchEvents(event);
-
-        // Calculate and update the gunner's angle continuously based on touch coordinates
-        const rect = canvas.getBoundingClientRect();
-        const touchX = event.touches[0].clientX - rect.left;
-        const touchY = event.touches[0].clientY - rect.top;
-        gunner.angle = Math.atan2(touchY - gunner.y, touchX - gunner.x);
-
-        // Enable shooting while touching and moving
         isShooting = true;
     }
-});
+}, { passive: false });
 
-// Event listener for touch end (when you release your finger from the canvas)
 canvas.addEventListener("touchend", (event) => {
-    event.preventDefault(); // Prevent the default touch event behavior
+    event.preventDefault();
     handleTouchEvents(event);
 
-    // Indicate that the touch has ended and stop shooting
     isTouching = false;
     isShooting = false;
-});
+}, { passive: false });
+
+// Function to draw a death message on the canvas
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
+function drawDeathMessage() {
+    ctx.fillStyle = "red";
+    ctx.font = "40px 'Black Ops One', sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("You Died!", canvas.width / 2, canvas.height / 2);
+}
+
+let isGunshotPlaying = false;
+
+// Function to handle shooting action
+function shoot() {
+    // Check if the game is over
+    if (isGameOver) {
+        return; // Do nothing if the game is over
+    }
+
+    // Check if the player is shooting
+    if (isShooting) {
+        // Play the gunshot audio if it's not already playing
+        if (!isGunshotPlaying) {
+            // Reset audio to the beginning and play it
+            // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
+            gunshotAudio.currentTime = 0;
+            gunshotAudio.play().catch(error => {
+                console.error('Gunshot audio play failed:', error);
+            });
+            isGunshotPlaying = true;
+        }
+
+        // Create a new bullet object with the gunner's position and direction
+        const bullet = {
+            x: gunner.x,
+            y: gunner.y,
+            speed: 6,
+            angle: gunner.shootingDirection * (Math.PI / 180), // Convert angle to radians
+        };
+
+        // Add the bullet to the bullets array
+        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+        bullets.push(bullet);
+    } else {
+        // Stop the gunshot audio if the player is not shooting
+        isGunshotPlaying = false;
+        gunshotAudio.pause();
+    }
+}
 
 
-// Start the game loop, which continuously updates the game state and animations
+// Function to shoot a bullet from an enemy target towards the player's position
+// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
+function shootTargetBullet(target) {
+    // Calculate the angle from the target to the gunner
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
+    const angle = Math.atan2(gunner.y - target.y, gunner.x - target.x);
+
+    // Create a bullet object with the calculated angle and predefined speed
+    const bullet = {
+        x: target.x,
+        y: target.y,
+        speed: 4.5,
+        angle: angle,
+    };
+
+    // Add the bullet to the array of enemy bullets
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+    enemyBullets.push(bullet);
+
+    // Play the target's gunshot audio
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+    const targetGunshotAudio = document.querySelector(".target-gunshot-audio");
+    targetGunshotAudio.currentTime = 0;
+    targetGunshotAudio.play().catch(error => {
+        console.error('Target gunshot audio play failed:', error);
+    });
+}
+
+
+// Function to spawn targets at random positions with increasing speed
+function spawnTargets() {
+    // Get the height of the canvas
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+    const canvasHeight = canvas.height;
+
+    // Generate a random y-coordinate for the target within the canvas height
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+    const targetY = Math.random() * canvasHeight;
+
+    // Get the current time in milliseconds since the Unix epoch
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
+    const currentTime = new Date().getTime();
+
+    // Calculate the elapsed time in seconds since the game started
+    const elapsedTime = (currentTime - startTime) / 1000;
+
+    // Calculate the number of elapsed intervals (1-second intervals)
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
+    const elapsedIntervals = Math.floor(elapsedTime / 1);
+
+    // Calculate the speed of the target with a random component and increasing speed over time
+    const targetSpeed = Math.random() * (1 + speedIncrement * elapsedIntervals) + 1;
+
+    // Create a target object with random position, calculated speed, and angle towards the gunner
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
+    const target = {
+        x: canvas.width,
+        y: targetY,
+        speed: targetSpeed,
+        angle: Math.atan2(gunner.y - targetY, gunner.x - canvas.width),
+    };
+
+    // Add the target to the array of targets
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+    targets.push(target);
+
+    // If the game is running and a random condition is met, make the target shoot a bullet
+    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+    if (gameIsRunning && Math.random() < 0.01) {
+        shootTargetBullet(target);
+    }
+}
+
+
+// Set an interval to repeatedly call the shoot function
+setInterval(shoot, 100);
+
+// Start the game loop
 gameLoop();
 
 
