@@ -82,22 +82,34 @@
       <input type="text" class="player-name" placeholder="Enter your name" />
       <span class="player-name-display"></span>
       <button class="start-button" onclick="startGame()">Start</button>
-      <button class="pause-button">Pause</button>
-      <button class="reset-button">Reset Game</button>
-      <button class="end-button">End Game</button>
+      <button class="pause-button" onclick="pauseGame()" title="Pause Game">Pause</button>
+      <button class="reset-button" onclick="resetGame()">Reset Game</button>
+      <button class="end-button" onclick="endGame()">End Game</button>
       <p class="timer">Time left: 02:00</p>
       <p class="health">Health: 100%</p>
       <p class="score">Score: 0</p>
     </div>
+    
 
-    <!-- Canvas for the game -->
-    <div>
-      <canvas
-        class="game-canvas moving-background"
-        width="800"
-        height="600"
-      ></canvas>
-    </div>
+<!-- Container for the game -->
+<div class="game-container">
+  <!-- Canvas for the game -->
+  <canvas
+    class="game-canvas moving-background"
+    width="800"
+    height="480"
+  ></canvas>
+  
+  <!-- Game controller buttons -->
+  <div class="game-controller">
+    <button class="up-button dpad-button">↑</button>
+    <button class="left-button dpad-button">←</button>
+    <button class="right-button dpad-button">→</button>
+    <button class="down-button dpad-button">↓</button>
+    <button class="shoot-button game-button">Shoot (Space)</button>
+  </div>
+</div>
+
 
     <!-- Images for the game elements -->
     <img
@@ -128,18 +140,6 @@
     <audio class="background-music2" loop>
       <source src="assets/audio/background-music-2.mp3" type="audio/mpeg" />
     </audio>
-
-    <!-- Player stats and game controls -->
-    <div class="player-stats">
-      <!-- On-screen touch control buttons for mobile and tablet devices -->
-      <div class="game-controller">
-        <button class="up-button dpad-button">W</button>
-        <button class="down-button dpad-button">S</button>
-        <button class="left-button dpad-button">A</button>
-        <button class="right-button dpad-button">D</button>
-        <button class="shoot-button game-button">Shoot (Space)</button>
-      </div>
-    </div>
 
     <!-- Include the JavaScript file for game functionality -->
     <script src="assets/scripts/script.js"></script>
