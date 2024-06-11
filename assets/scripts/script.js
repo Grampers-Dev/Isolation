@@ -32,15 +32,36 @@ const assets = {
   fighterJetImage: new Image(),
   targetImage: new Image(),
   bulletImage: new Image(),
-  backgroundMusic: new Audio("assets/audio/background-music.mp3"),
-  backgroundMusic2: new Audio("assets/audio/background-music2.mp3"),
-  gunshotAudio: new Audio("assets/audio/gunshot.mp3"),
-  targetGunshotAudio: new Audio("assets/audio/target-gunshot.mp3")
+  backgroundMusic: new Audio("assets/audio/maintheme-music.mp3"),
+  backgroundMusic2: new Audio("assets/audio/background-music-2.mp3"),
+  gunshotAudio: new Audio("assets/audio/heavymachinegun-6998.mp3"),
+  targetGunshotAudio: new Audio("assets/audio/target-gunfire-2.mp3")
 };
 
-assets.fighterJetImage.src = "assets/images/fighter-jet.png";
-assets.targetImage.src = "assets/images/target.png";
+let assetsLoaded = 0;
+const totalAssets = 7;
+
+function checkAllAssetsLoaded() {
+  assetsLoaded++;
+  if (assetsLoaded === totalAssets) {
+    // Start the game loop only when all images and audio files are loaded
+    startGame();
+  }
+}
+
+assets.fighterJetImage.src = "assets/images/player-1-jet-fixed.png";
+assets.fighterJetImage.onload = checkAllAssetsLoaded;
+
+assets.targetImage.src = "assets/images/target-enemy.png";
+assets.targetImage.onload = checkAllAssetsLoaded;
+
 assets.bulletImage.src = "assets/images/player-bullet-image.png";
+assets.bulletImage.onload = checkAllAssetsLoaded;
+
+assets.backgroundMusic.oncanplaythrough = checkAllAssetsLoaded;
+assets.backgroundMusic2.oncanplaythrough = checkAllAssetsLoaded;
+assets.gunshotAudio.oncanplaythrough = checkAllAssetsLoaded;
+assets.targetGunshotAudio.oncanplaythrough = checkAllAssetsLoaded;
 
 assets.backgroundMusic.volume = 0.5;
 assets.backgroundMusic2.volume = 1;
@@ -978,8 +999,6 @@ setInterval(shoot, 100);
 
 // Start the game loop
 gameLoop();
-
-
 
 
 
