@@ -23,7 +23,6 @@ body {
 
 /* Define a class for elements with a moving background */
 .moving-background {
-    animation: moveBackground 135s linear infinite;
     background-image: url("assets/images/canvas-background-image-2.jpg");
     background-size: cover;
     background-position: center;
