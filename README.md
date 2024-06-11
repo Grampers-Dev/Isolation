@@ -5,25 +5,73 @@ Welcome to the Isolation Jetfighter Shooter website, where you can immerse yours
 ## Table of Contents
 
 - [Isolation - Jetfighter Shooter Website](#isolation---jetfighter-shooter-website)
- [![Header Logo](./assets/images/header-logo.jpg)](#section-header)
+[![Header Logo](./assets/images/header-logo.jpg)]
   - [Table of Contents](#table-of-contents)
   - [Mission Log](#mission-log)
- [![Mission Log](./assets/images/mission-log.jpg)](#section-missionlog)
+ [![Mission Log](./assets/images/mission-log.jpg)]
   - [How to Play](#how-to-play)
- [![How to play](./assets/images/how-to-play.jpg)](#section-how-to-play)
+ [![How to play](./assets/images/how-to-play.jpg)]
     - [Game Controls](#game-controls)
-    [![Game Controls](./assets/images/game-controls.jpg)](#section-game-controls) 
+    [![Game Controls](./assets/images/game-controls.jpg)]
     - [Health and Survival](#health-and-survival)
     - [Mobile and Tablet Controls](#mobile-and-tablet-controls)
   - [Game Instructions](#game-instructions)
   - [Canvas for the Game](#canvas-for-the-game)
-  [![Game Canvas](./assets/images/game-canvas.jpg)](#section-game-canvas) 
+  [![Game Canvas](./assets/images/game-canvas.jpg)]
   - [Game Elements](#game-elements)
   - [Player Stats and Game Controls](#player-stats-and-game-controls)
-  [![Player Stats](./assets/images/player-stats.jpg)](#section-player-stats)
+  [![Player Stats](./assets/images/player-stats.jpg)]
   - [JavaScript Functionality](#javascript-functionality)
-  - [Contact Information](#contact-information)
+    - [Bugs](#bugs)
+    - [Bugfixes](#bugfixes)
+      - [Efforts to Address Bugs:](#efforts-to-address-bugs)
+    - [Update](#update)
+  - [Technologies Used](#technologies-used)
+  - [Validation and Quality Assurance](#validation-and-quality-assurance)
+  - [Deployment](#deployment)
+    - [Deploy to GitHub Pages](#deploy-to-github-pages)
+    - [Fork the Repository](#fork-the-repository)
+    - [Create a Local Clone](#create-a-local-clone)
   - [Credits](#credits)
+  - [Code Update Summary](#code-update-summary)
+    - [Overview of Key Changes and Improvements](#overview-of-key-changes-and-improvements)
+      - [DOM Element Variables](#dom-element-variables)
+      - [Volume Levels](#volume-levels)
+    - [Gunner Object](#gunner-object)
+    - [Functions](#functions)
+      - [Draw Gunner](#draw-gunner)
+      - [Draw Bullets and Targets](#draw-bullets-and-targets)
+      - [Handle Input](#handle-input)
+      - [Handle Collisions](#handle-collisions)
+      - [Game Loop](#game-loop)
+    - [Event Listeners](#event-listeners)
+      - [Keyboard Events](#keyboard-events)
+      - [Touch Events](#touch-events)
+    - [Game Mechanics](#game-mechanics)
+      - [Start Game](#start-game)
+      - [End Game](#end-game)
+      - [Reset Game](#reset-game)
+    - [Timer and Interval Management](#timer-and-interval-management)
+      - [Update Timer](#update-timer)
+      - [Shooting and Spawning Targets](#shooting-and-spawning-targets)
+    - [Error Handling](#error-handling)
+      - [Audio Play](#audio-play)
+    - [Detailed Code Review](#detailed-code-review)
+      - [Documentation and References](#documentation-and-references)
+      - [Gunner Object Enhancements](#gunner-object-enhancements)
+      - [Game Initialization](#game-initialization)
+      - [Event Listeners for Buttons and Touch Controls](#event-listeners-for-buttons-and-touch-controls)
+      - [Canvas and Context Handling](#canvas-and-context-handling)
+      - [Game Loop and Update Function](#game-loop-and-update-function)
+      - [Collision Handling](#collision-handling)
+      - [Audio Management](#audio-management)
+      - [Player Input Handling](#player-input-handling)
+      - [Timer and Game State Management](#timer-and-game-state-management)
+      - [Game Control Functions](#game-control-functions)
+      - [Drawing Functions](#drawing-functions)
+    - [Conclusion](#conclusion)
+  - [Use of MDN Documentation](#use-of-mdn-documentation)
+  - [Attributions](#attributions)
 
 ## Mission Log
 
@@ -56,7 +104,8 @@ On tablet and mobile devices, you can control the game using on-screen buttons:
 - **Down Button:** Move Down
 - **Left Button:** Move Left
 - **Right Button:** Move Right
-- **Shoot Button:** Fire your weapons
+- **Shoot Button:** Fire your weapon
+- Shooting is also achieved by pressing on the canvas
 
 Good luck, and may victory be yours!
 
@@ -90,71 +139,100 @@ The game is rendered within a canvas element with a width of 800 pixels and a he
 
 The game functionality is powered by JavaScript, which is included in the `script.js` file.
 
-#### Bugs
+### Bugs
 
 - The player's fighter jet may not respond correctly to touch gestures for aiming.
 - [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
 - Prolonged touch input may result in unexpected behavior, including the player going outside the game canvas.
 - The reset button would only partly work by ending the game but not reloading the game into a fresh state.
 - Player input name would not display after the user enters their name.
-- When the payer dies the shooting sound keeps on playing.
+- When the player dies, the shooting sound keeps on playing.
 
-#### Bugfixes
+### Bugfixes
 
-While I have identified several issues within the game, it's important to note that I have encountered some challenges in addressing these bugs. However, I have taken steps to document the code for readability and future improvements, ensuring that other developers can review the code and potentially find solutions to these issues.
+While several issues within the game remain, I have documented the code for readability and future improvements, ensuring that other developers can review the code and potentially find solutions.
 
-Here's a summary of my efforts:
+#### Efforts to Address Bugs:
 
 1. **Touch Control Issue:**
-   - Despite my best efforts, I encountered difficulties in achieving precise touch control aiming on mobile and tablet devices. While the issue persists, I have documented the relevant code for further examination and potential improvements.
+   - Difficulty in achieving precise touch control aiming on mobile and tablet devices.
+   - Documented relevant code for further examination and potential improvements.
 
 2. **Prevent Default Warning:**
-   - I faced challenges in resolving the "preventDefault" warning related to passive event listeners. Although I couldn't eliminate this warning entirely, I have documented the code to provide insights for future development.
+   - Challenges in resolving the "preventDefault" warning related to passive event listeners.
+   - Documented the code to provide insights for future development.
 
 3. **Prolonged Touch Input Behavior:**
-   - The unexpected behavior during prolonged touch input remains unresolved. Nevertheless, I have documented the code involved in touch event handling, which may aid in diagnosing and rectifying this issue.
+   - Unexpected behavior during prolonged touch input remains unresolved.
+   - Documented the code involved in touch event handling for diagnosing and rectifying this issue.
 
 4. **Reset Button Functionality:**
-   - The reset button's partial functionality has not been fully resolved. I have documented the code for the reset button, allowing for potential future enhancements.
+   - The reset button's partial functionality has not been fully resolved.
+   - Documented the code for the reset button, allowing for potential future enhancements.
+  
+### Update
+  
+- I applied fixes for this where the shooting sound stops and the game reloads correctly.
+- Users can re-start the game now.
 
-5. **Player Input Name Display:**
-   - Despite our efforts, the issue with player input names not displaying has not been fixed. I have documented the code related to player names, which could assist in finding a solution.
+1. **Player Input Name Display:**
+   - Issue with player input names not displaying remains unresolved.
+   - Documented the code related to player names to assist in finding a solution.
 
-6. **Endless Shooting Sound:**
-   - The issue of continuous shooting sound after the player's death remains unresolved. I have documented the code related to audio management for reference in future fixes.
-
-My commitment to improving the game experience remains steadfast. I appreciate your understanding and patience as I continue to work on addressing these challenges.
+2. **Endless Shooting Sound:**
+   - Issue of continuous shooting sound after the player's death remains unresolved.
+   - Documented the code related to audio management for reference in future fixes.
 
 ## Technologies Used
 
 This project is built using the following technologies:
 
-- **HTML:** The structure of the game and user interface is developed using HTML (Hypertext Markup Language), providing the foundation for the game's layout and content.
-
-- **CSS:** Cascading Style Sheets (CSS) are used to style and design the game's appearance, including layouts, colors, fonts, and responsive design elements.
-
-- **JavaScript:** The game functionality and interactivity are powered by JavaScript, enabling dynamic gameplay, user input handling, and game logic.
+- **HTML:** Structure of the game and user interface.
+- **CSS:** Styling and design of the game's appearance, including layouts, colors, fonts, and responsive design elements.
+- **JavaScript:** Game functionality and interactivity, enabling dynamic gameplay, user input handling, and game logic.
 
 ## Validation and Quality Assurance
 
-I'm dedicated to maintaining the quality and reliability of my codebase. To ensure that my JavaScript code meets high coding standards and is free of potential errors, I validated it using JSHint ([jshint.com](https://jshint.com/)).
+Ensuring the quality and reliability of the codebase through validation and testing:
 
-Key points regarding my JavaScript code validation:
+- **JavaScript:** Validated using JSHint ([jshint.com](https://jshint.com/)). The code passes with no warnings.
+- **HTML and CSS:** Validated using the W3C Markup Validation Service ([validator.w3.org](https://validator.w3.org/)).
 
-- I used JSHint to analyze my JavaScript file, checking for syntax errors, coding conventions, and potential issues.
+## Deployment
 
-- My JavaScript code passes through JSHint validation with no warnings, demonstrating my commitment to clean and well-structured code.
+### Deploy to GitHub Pages
 
-I also conducted HTML and CSS validation using the W3C Markup Validation Service ([validator.w3.org](https://validator.w3.org/)) to ensure comprehensive quality assurance.
+The site was deployed to GitHub Pages:
 
-- Both my HTML and CSS pass through validation with no warnings or errors.
+1. Go to Settings in the repository.
+2. Navigate to the **Pages** tab.
+3. Under **Source**, select the branch (e.g., **main**), then click **save**.
+4. The page will refresh with a ribbon display indicating the successful deployment.
 
-Thank you for choosing my game, and I hope you have a fantastic time playing it!
+### Fork the Repository
+
+To fork the repository:
+
+1. Log in to **GitHub** and locate the [repository](https://github.com/Grampers-Dev/Isolation).
+2. Click the **'Fork'** button on the right-hand side to create a copy of the repository in your GitHub account.
+
+### Create a Local Clone
+
+To clone the repository:
+
+1. Click on the **code** tab in the repository.
+2. Copy the URL in the **Clone with HTTPS** section.
+3. Open **Git Bash** in your IDE.
+4. Change the current working directory to the desired location for the clone.
+5. Type `git clone` and paste the copied URL.
+6. Press **enter** to create the local clone.
+
+The live link to the GitHub repository: <https://grampers-dev.github.io/Isolation/>
 
 ## Credits
 
 - Fighter Jet Image: [Image Source](https://www.google.ie/)
-- Background image and Game Canvas [Image Source](https://www.vecteezy.com/)
+- Background image and Game Canvas: [Image Source](https://www.vecteezy.com/)
 - Sound Effects: [Sound Source](https://pixabay.com/)
 - Enemy Target Image: [Image Source](https://www.vecteezy.com/)
 - Game Development: [Graham Walsh](https://grampers-dev.github.io/Isolation/)
@@ -162,117 +240,149 @@ Thank you for choosing my game, and I hope you have a fantastic time playing it!
 ## Code Update Summary
 
 ### Overview of Key Changes and Improvements
-This section provides an overview of the significant changes and improvements made to the JavaScript code. The updates focus on enhancing readability, maintainability, and performance while adhering to best practices and standards.
 
-### DOM Element Variables
-#### Grouping of similar elements:
-- The canvas, context, button elements, timer, health, score display elements, and directional control buttons are grouped together with comments explaining their purpose.
-- References to the DOM elements are organized with comments and links to relevant documentation.
+The significant changes and improvements I made to the JavaScript code for better readability, maintainability, and performance:
 
-#### Volume Levels:
-- The volume levels for `backgroundMusic` and `backgroundMusic2` are set differently (`backgroundMusic.volume = 0.5` and `backgroundMusic2.volume = 1`).
+#### DOM Element Variables
+
+- Grouped similar elements together with comments explaining their purpose.
+- Organized references to the DOM elements with comments and links to relevant documentation.
+
+#### Volume Levels
+
+- Set volume levels for `backgroundMusic` and `backgroundMusic2` differently.
 
 ### Gunner Object
-#### Initialization:
-- The `gunner` object has added properties `movingLeft` and `movingRight` for movement, and `shootingDirection` to handle shooting direction.
-- The initial position of the gunner is set to the left edge of the canvas.
+
+- Added properties `movingLeft` and `movingRight` for movement, and `shootingDirection` to handle shooting direction.
+- Set the initial position of the gunner to the left edge of the canvas.
 
 ### Functions
-#### Draw Gunner:
-- Improved comments and references to the documentation for each method used in the function.
 
-#### Draw Bullets and Targets:
+#### Draw Gunner
+
+- Improved comments and references to documentation for each method used.
+
+#### Draw Bullets and Targets
+
 - Consistent use of comments and documentation references for each step.
 
-#### Handle Input:
+#### Handle Input
+
 - Added bounds checking to ensure the gunner does not move outside the canvas.
 
-#### Handle Collisions:
+#### Handle Collisions
+
 - Improved comments and references to collision detection techniques and resources.
 
-#### Game Loop:
+#### Game Loop
+
 - Added a check to set `gameIsRunning` to `true` when the game starts and incorporated error handling for audio play.
 
 ### Event Listeners
-#### Keyboard Events:
+
+#### Keyboard Events
+
 - Combined keydown and keyup event listeners to handle movement and shooting.
 
-#### Touch Events:
+#### Touch Events
+
 - Added event listeners for touchstart and touchend events with improved comments and references.
 - Added passive options to touch event listeners to improve performance.
 
 ### Game Mechanics
-#### Start Game:
+
+#### Start Game
+
 - Improved comments and references for each step, added error handling for audio play, and updated game state management.
 
-#### End Game:
+#### End Game
+
 - Included error handling and improved comments for cleanup tasks.
 
-#### Reset Game:
+#### Reset Game
+
 - Improved comments and reset state management for a fresh start.
 
 ### Timer and Interval Management
-#### Update Timer:
+
+#### Update Timer
+
 - Enhanced comments for better understanding of the timing calculations and formatting.
 
-#### Shooting and Spawning Targets:
+#### Shooting and Spawning Targets
+
 - Improved comments, added references, and managed the spawning of targets and shooting actions.
 
 ### Error Handling
-#### Audio Play:
-- Added error handling for playing audio elements to manage potential issues.
+
+#### Audio Play
+
+- Added error handling for audio playback to ensure smooth user experience.
 
 ### Detailed Code Review
 
-#### Documentation and References:
-- Added detailed comments and references to MDN documentation for various methods and properties, which improves code readability and maintainability.
+#### Documentation and References
 
-#### Gunner Object Enhancements:
+- Added detailed comments and references to MDN documentation for various methods and properties, improving code readability and maintainability.
+
+#### Gunner Object Enhancements
+
 - Added `movingLeft` and `movingRight` properties to the `gunner` object.
 - Included `shootingDirection` to handle the shooting direction.
 
-#### Game Initialization:
+#### Game Initialization
+
 - Moved the initialization of the leaderboard array inside the DOM element variables section.
 - Added a constant `speedIncrement` to control the speed increment of targets.
 
-#### Event Listeners:
+#### Event Listeners for Buttons and Touch Controls
+
 - Improved event listeners for buttons and touch controls with passive event options to enhance performance.
 - Added detailed comments and MDN references for each event listener.
 
-#### Canvas and Context Handling:
+#### Canvas and Context Handling
+
 - Added more detailed comments and references for `canvas` and `ctx` operations.
 
-#### Game Loop and Update Function:
+#### Game Loop and Update Function
+
 - Improved the `update` function with more detailed comments and better structuring of tasks like handling input, drawing elements, and updating positions.
 - The `gameLoop` function now checks `isPaused` and `isGameOver` states before calling `update`.
 
-#### Collision Handling:
+#### Collision Handling
+
 - Simplified collision detection logic with improved comments and references to MDN and game development resources.
 - Added a new collision handling method for both player and enemy bullets.
 
-#### Audio Management:
+#### Audio Management
+
 - Added error handling for audio playback to ensure smooth user experience.
 - Improved comments for audio elements and playback logic.
 
-#### Player Input Handling:
+#### Player Input Handling
+
 - Enhanced `handleInput` function to ensure the gunner stays within canvas bounds.
 - Improved comments and added references for handling keyboard and touch events.
 
-#### Timer and Game State Management:
+#### Timer and Game State Management
+
 - Improved `updateTimer` function with detailed comments and MDN references for date and time calculations.
 - Reset game intervals and timeouts more efficiently in the `resetGame` function.
 
-#### Game Control Functions:
+#### Game Control Functions
+
 - Enhanced `startGame`, `endGame`, and `resetGame` functions with better state management and more detailed comments.
 - Ensured proper cleanup and resetting of game states and elements.
 
-#### Drawing Functions:
+#### Drawing Functions
+
 - Added detailed comments for `drawGunner`, `drawBullets`, and `drawTargets` functions.
 - Improved the drawing logic to handle various transformations and state changes.
 
 ### Conclusion
-The updated code is significantly more maintainable, readable, and efficient. It incorporates comprehensive documentation and references to MDN, ensuring that other developers can easily understand and extend the game. The improvements in state management, collision detection, and input handling contribute to a smoother gameplay experience.
 
+The updated code is significantly more maintainable, readable, and efficient. It incorporates comprehensive documentation and references to MDN, ensuring that other developers can easily understand and extend the game. The improvements in state management, collision detection, and input handling contribute to a smoother gameplay experience.
 
 ## Use of MDN Documentation
 
@@ -312,7 +422,7 @@ Throughout the development of this project, I made extensive use of the Mozilla 
 
 By leveraging MDN's comprehensive and authoritative resources, I was able to implement features with confidence, knowing that I was following the latest web standards and best practices. MDN documentation provided invaluable guidance on a wide range of topics, from basic DOM manipulation to complex canvas operations, ensuring that the codebase is robust and maintainable.
 
-## References
+## Attributions
 
 1. [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
 2. [Document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector)
