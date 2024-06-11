@@ -68,33 +68,6 @@ assets.backgroundMusic2.volume = 1;
 assets.gunshotAudio.volume = 1;
 assets.targetGunshotAudio.volume = 1;
 
-// Add event listeners to adjust jet size on window resize
-function debounce(func, wait) {
-  let timeout;
-  return function(...args) {
-    const context = this;
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(context, args), wait);
-  };
-}
-
-function adjustJetSize() {
-  const screenWidth = window.innerWidth;
-  if (screenWidth <= 480) {
-    jetWidth = 60;
-    jetHeight = (60 / 120) * 88; // Maintain aspect ratio
-  } else if (screenWidth <= 768) {
-    jetWidth = 90;
-    jetHeight = (90 / 120) * 88; // Maintain aspect ratio
-  } else {
-    jetWidth = 120;
-    jetHeight = 88;
-  }
-}
-
-window.addEventListener('resize', debounce(adjustJetSize, 100));
-document.addEventListener('DOMContentLoaded', adjustJetSize);
-
 // Get the instructions button and instructions display elements
 const instructionsButton = document.querySelector(".instructions-button");
 const instructions = document.querySelector(".instructions");
@@ -535,15 +508,24 @@ endButton.addEventListener("click", () => {
   endGame();
 });
 
-// Function to start the game and initialize game elements
+// Function to validate the player name input
+function validatePlayerName() {
+  const playerName = document.querySelector(".player-name").value.trim();
+  if (!playerName) {
+    alert("Player name cannot be empty!");
+  } else {
+    startGame();
+  }
+}
+
+// Existing startGame function modified to remove inline event handler
 function startGame() {
-  // Get player name input and display elements
+  // Existing code to start the game
   const playerNameInput = document.querySelector(".player-name");
   const playerNameDisplay = document.querySelector(".player-name-display");
   const playerName = playerNameInput.value.trim();
 
   // Check if the player name is not empty
-  // Reference: https://www.w3schools.com/jsref/prop_text_value.asp
   if (playerName !== "") {
     // Hide the player name input and display the player name
     playerNameInput.style.display = "none";
@@ -551,7 +533,6 @@ function startGame() {
     playerNameDisplay.style.display = "inline";
 
     // Set up the shooting interval to call the shoot function every 100 milliseconds
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
     shootingInterval = setInterval(shoot, 100);
 
     // Hide the start button and display the game canvas
@@ -559,25 +540,21 @@ function startGame() {
     canvas.style.display = "block";
 
     // Initialize the game start time
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
     startTime = new Date().getTime();
 
     // Set up the game interval to call the updateTimer function every second
     gameInterval = setInterval(updateTimer, 1000);
 
     // Set up the interval to spawn targets every second
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
     setInterval(spawnTargets, 1000);
 
     // Set the game running state to true
     gameIsRunning = true;
 
     // Start the game loop
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
     gameLoop();
 
     // Play background music with error handling
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
     assets.backgroundMusic.play().catch((error) => {
       console.error("Background music play failed:", error);
     });
@@ -588,7 +565,10 @@ function startGame() {
   }
 }
 
-// Function to handle game ending and cleanup
+// Event listener for the "Start" button click
+startButton.addEventListener("click", validatePlayerName);
+
+
 function endGame() {
   // Clear the game interval to stop the timer
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
@@ -608,6 +588,12 @@ function endGame() {
   assets.backgroundMusic.currentTime = 0;
   assets.backgroundMusic2.pause();
   assets.backgroundMusic2.currentTime = 0;
+
+  // Stop the shooting sound
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
+  isShooting = false; // Stop shooting
+  assets.gunshotAudio.pause();
+  assets.gunshotAudio.currentTime = 0;
 
   // Get the player's name from the input field
   // Reference: https://www.w3schools.com/jsref/prop_text_value.asp
@@ -635,7 +621,7 @@ function endGame() {
   }
 }
 
-// Function to reset the game state and prepare for a new game
+
 function resetGame() {
   // Reset the gunner's position to the left edge of the canvas and center vertically
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage
@@ -694,12 +680,22 @@ function resetGame() {
   playerNameDisplay.style.display = "none";
   playerNameDisplay.textContent = "";
 
+  // Show the start button again
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
+  startButton.style.display = "inline";
+
   // Pause and reset the background music
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
   assets.backgroundMusic.pause();
   assets.backgroundMusic.currentTime = 0;
   assets.backgroundMusic2.pause();
   assets.backgroundMusic2.currentTime = 0;
+
+  // Stop the shooting sound
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
+  isShooting = false; // Stop shooting
+  assets.gunshotAudio.pause();
+  assets.gunshotAudio.currentTime = 0;
 
   // Ensure any other intervals are cleared
   let id = window.setTimeout(function () {}, 0);
@@ -709,11 +705,33 @@ function resetGame() {
 
   // Clear isGunshotPlaying flag
   isGunshotPlaying = false;
+
+  // Re-initialize game elements
+  gameInterval = null;
+  shootingInterval = null;
 }
+
+
+// Event listener for the "Reset" button click
+resetButton.addEventListener("click", () => {
+  resetGame();
+});
+
+// Ensure startGame does not get called twice
+startButton.addEventListener("click", () => {
+  if (!gameIsRunning) {
+    startGame();
+  }
+});
+
 
 // Event listener to handle keyboard keydown events
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event
 window.addEventListener("keydown", (event) => {
+  if (isPaused) {
+    return; // Do nothing if the game is paused
+  }
+
   if (event.key === "w") {
     // Move gunner up when 'w' key is pressed
     gunner.movingUp = true;
@@ -752,6 +770,7 @@ window.addEventListener("keyup", (event) => {
     isShooting = false;
   }
 });
+
 
 // Event listeners for touch controls on buttons (touchstart)
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
