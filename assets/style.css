@@ -21,7 +21,8 @@ body {
     overflow: auto; /* Ensure scrolling is enabled */
 }
 
-/* Define a class for elements with a moving background */
+/* Define a class for elements with a moving background
+Removed the animation to due lagging error */
 .moving-background {
     background-image: url("assets/images/canvas-background-image-2.jpg");
     background-size: cover;
@@ -42,9 +43,24 @@ li {
     padding: 0;
 }
 
+nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  nav ul li {
+    margin-right: 1rem;
+  }
+  nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    transition: color 0.3s ease;
+  }
+  nav ul li a:hover {
+    color: #007BFF;
+  }
+
 /* Style for the page header */
 .page-header {
-    display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 2px 10px 10px #b0dfff;
@@ -135,7 +151,6 @@ div.instructions {
     margin: 20px auto;
     text-align: center;
     font-family: "Black Ops One";
-    /* Apply 'Black Ops One' font */
 }
 
 /* Styling for buttons */
