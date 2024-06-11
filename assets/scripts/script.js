@@ -1,3 +1,4 @@
+
 // DOM element variables
 
 // Get the canvas element and its 2D rendering context
@@ -546,7 +547,7 @@ function startGame() {
     gameInterval = setInterval(updateTimer, 1000);
 
     // Set up the interval to spawn targets every second
-    setInterval(spawnTargets, 1000);
+    setInterval(spawnTargets, 2000);
 
     // Set the game running state to true
     gameIsRunning = true;
@@ -955,7 +956,7 @@ function shoot() {
     const bullet = {
       x: gunner.x,
       y: gunner.y,
-      speed: 6,
+      speed: 3,
       angle: gunner.shootingDirection * (Math.PI / 180), // Convert angle to radians
     };
 
@@ -1018,7 +1019,7 @@ function spawnTargets() {
   const elapsedIntervals = Math.floor(elapsedTime / 1);
 
   // Calculate the speed of the target with a random component and increasing speed over time
-  const targetSpeed = Math.random() * (0.5 + speedIncrement * elapsedIntervals) + 0.5;
+  const targetSpeed = Math.random() * (0.25 + speedIncrement * elapsedIntervals) + 0.25;
 
   // Create a target object with random position, calculated speed, and angle towards the gunner
   // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
@@ -1041,7 +1042,7 @@ function spawnTargets() {
 }
 
 // Set an interval to repeatedly call the shoot function
-setInterval(shoot, 100);
+setInterval(shoot, 200);
 
 // Start the game loop
 gameLoop();
