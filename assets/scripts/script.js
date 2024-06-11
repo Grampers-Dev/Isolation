@@ -77,7 +77,7 @@ let shootingInterval;
 let leaderboard = [];
 
 // Define a constant for speed increment
-const speedIncrement = 0.5; // Increase speed by 0.5 units every time
+const speedIncrement = 0.10; // Increase speed by 0.5 units every time
 
 // Add an event listener to the instructionsButton element
 instructionsButton.addEventListener("click", () => {
@@ -1018,7 +1018,7 @@ function spawnTargets() {
   const elapsedIntervals = Math.floor(elapsedTime / 1);
 
   // Calculate the speed of the target with a random component and increasing speed over time
-  const targetSpeed = Math.random() * (1 + speedIncrement * elapsedIntervals) + 1;
+  const targetSpeed = Math.random() * (0.5 + speedIncrement * elapsedIntervals) + 0.5;
 
   // Create a target object with random position, calculated speed, and angle towards the gunner
   // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2
