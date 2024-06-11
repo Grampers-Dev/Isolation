@@ -102,9 +102,6 @@ div.mission-log {
 }
 
 /* Styling for various UI elements */
-.timer,
-.health,
-.score,
 .startButton,
 .pauseButton,
 .endButton,
@@ -399,6 +396,7 @@ button:hover {
         gap: 5px;
         width: 110px; /* Adjust as needed */
         height: 110px; /* Adjust as needed */
+        margin-top: 45px;
     }
 
     .dpad-button {
@@ -415,6 +413,8 @@ button:hover {
         font-size: 14px;
     }
 }
+
+
 
 
 
