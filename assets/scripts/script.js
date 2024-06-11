@@ -68,6 +68,33 @@ assets.backgroundMusic2.volume = 1;
 assets.gunshotAudio.volume = 1;
 assets.targetGunshotAudio.volume = 1;
 
+// Add event listeners to adjust jet size on window resize
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
+function adjustJetSize() {
+  const screenWidth = window.innerWidth;
+  if (screenWidth <= 480) {
+    jetWidth = 60;
+    jetHeight = (60 / 120) * 88; // Maintain aspect ratio
+  } else if (screenWidth <= 768) {
+    jetWidth = 90;
+    jetHeight = (90 / 120) * 88; // Maintain aspect ratio
+  } else {
+    jetWidth = 120;
+    jetHeight = 88;
+  }
+}
+
+window.addEventListener('resize', debounce(adjustJetSize, 100));
+document.addEventListener('DOMContentLoaded', adjustJetSize);
+
 // Get the instructions button and instructions display elements
 const instructionsButton = document.querySelector(".instructions-button");
 const instructions = document.querySelector(".instructions");
