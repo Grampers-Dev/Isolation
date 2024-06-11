@@ -26,20 +26,26 @@ const rightButton = document.querySelector(".right-button");
 // Get the shoot button
 const shootButton = document.querySelector(".shoot-button");
 
-// Load the bullet image
+// Preload game assets (images and audio)
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/Image
-const bulletImage = new Image();
-bulletImage.src = "assets/images/player-bullet-image.png";
+const assets = {
+  fighterJetImage: new Image(),
+  targetImage: new Image(),
+  bulletImage: new Image(),
+  backgroundMusic: new Audio("assets/audio/background-music.mp3"),
+  backgroundMusic2: new Audio("assets/audio/background-music2.mp3"),
+  gunshotAudio: new Audio("assets/audio/gunshot.mp3"),
+  targetGunshotAudio: new Audio("assets/audio/target-gunshot.mp3")
+};
 
-// Get the background music and gunshot audio elements
-const backgroundMusic = document.querySelector(".background-music");
-const backgroundMusic2 = document.querySelector(".background-music2");
-const gunshotAudio = document.querySelector(".gunshot-audio");
+assets.fighterJetImage.src = "assets/images/fighter-jet.png";
+assets.targetImage.src = "assets/images/target.png";
+assets.bulletImage.src = "assets/images/player-bullet-image.png";
 
-// Set the volume levels for the background music
-// Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/volume
-backgroundMusic.volume = 0.5;
-backgroundMusic2.volume = 1;
+assets.backgroundMusic.volume = 0.5;
+assets.backgroundMusic2.volume = 1;
+assets.gunshotAudio.volume = 1;
+assets.targetGunshotAudio.volume = 1;
 
 // Get the instructions button and instructions display elements
 const instructionsButton = document.querySelector(".instructions-button");
@@ -100,15 +106,33 @@ function drawGunner() {
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/rotate
   ctx.rotate(gunner.shootingDirection * (Math.PI / 180));
 
-  // Get the gunner image element from the DOM
-  const fighterJetImage = document.querySelector(".fighter-jet");
-  const jetWidth = 120;
-  const jetHeight = 88;
+  // Set the dimensions for the fighter jet image
+  let jetWidth = 120;
+  let jetHeight = 88;
+
+  // Function to adjust jet size based on screen width
+  function adjustJetSize() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 480) {
+      jetWidth = 60;
+      jetHeight = (60 / 120) * 88; // Maintain aspect ratio
+    } else if (screenWidth <= 768) {
+      jetWidth = 90;
+      jetHeight = (90 / 120) * 88; // Maintain aspect ratio
+    } else {
+      jetWidth = 120;
+      jetHeight = 88;
+    }
+  }
+
+  // Add event listeners to adjust jet size on window resize and DOM content load
+  window.addEventListener('resize', adjustJetSize);
+  document.addEventListener('DOMContentLoaded', adjustJetSize);
 
   // Draw the gunner image centered at the current canvas origin
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
   ctx.drawImage(
-    fighterJetImage,
+    assets.fighterJetImage,
     -jetWidth / 2, // Center the image horizontally
     -jetHeight / 2, // Center the image vertically
     jetWidth, // Width of the image
@@ -187,9 +211,6 @@ function drawBullets() {
 // Function to draw targets (enemies) on the canvas
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes
 function drawTargets() {
-  // Get the target image element from the DOM
-  const targetImage = document.querySelector(".target-image");
-
   // Iterate through each target in the targets array
   targets.forEach((target) => {
     // Save the current canvas state
@@ -211,7 +232,7 @@ function drawTargets() {
     // Draw the target image centered at the current canvas origin
     // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
     ctx.drawImage(
-      targetImage,
+      assets.targetImage,
       -targetWidth / 2, // Center the image horizontally
       -targetHeight / 2, // Center the image vertically
       targetWidth, // Width of the image
@@ -226,6 +247,7 @@ function drawTargets() {
 
 // Function to clear the entire canvas
 function clearCanvas() {
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -385,56 +407,6 @@ function handleCollisions() {
   });
 }
 
-// Function to handle collisions between bullets and targets, and between enemy bullets and the gunner
-function handleCollisions() {
-  // Iterate through each bullet in the bullets array
-  // Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-  bullets.forEach((bullet, bulletIndex) => {
-    // Iterate through each target in the targets array
-    targets.forEach((target, targetIndex) => {
-      // Simple bounding box collision detection
-      // Reference: https://gamedev.stackexchange.com/questions/586/what-is-the-fastest-way-to-work-out-2d-bounding-box-intersection
-      if (
-        bullet.x > target.x - 15 && // Check if bullet's x position is within target's x bounds
-        bullet.x < target.x + 15 &&
-        bullet.y > target.y - 15 && // Check if bullet's y position is within target's y bounds
-        bullet.y < target.y + 15
-      ) {
-        // Remove the bullet and target from their respective arrays
-        // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
-        bullets.splice(bulletIndex, 1);
-        targets.splice(targetIndex, 1);
-
-        // Increase score when a target is hit
-        score += 10;
-        scoreElement.textContent = `Score: ${score}`;
-      }
-    });
-  });
-
-  // Iterate through each bullet in the enemyBullets array
-  enemyBullets.forEach((bullet, bulletIndex) => {
-    // Calculate distance between the gunner and the bullet
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
-    const dx = gunner.x - bullet.x;
-    const dy = gunner.y - bullet.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    // If distance is less than threshold, a collision occurred
-    // Reference: https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
-    if (distance < 5) {
-      gunner.health -= 10; // Decrease gunner's health
-      healthElement.textContent = `Health: ${gunner.health}%`;
-      enemyBullets.splice(bulletIndex, 1); // Remove the enemy bullet
-
-      // End game if gunner's health is zero or less
-      if (gunner.health <= 0) {
-        endGame();
-      }
-    }
-  });
-}
-
 // Function that serves as the game loop responsible for updating the game and rendering frames
 function gameLoop() {
   if (!isPaused && !isGameOver) {
@@ -558,11 +530,11 @@ function startGame() {
 
     // Play background music with error handling
     // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
-    backgroundMusic.play().catch((error) => {
+    assets.backgroundMusic.play().catch((error) => {
       console.error("Background music play failed:", error);
     });
 
-    backgroundMusic2.play().catch((error) => {
+    assets.backgroundMusic2.play().catch((error) => {
       console.error("Background music 2 play failed:", error);
     });
   }
@@ -584,10 +556,10 @@ function endGame() {
 
   // Pause the background music and reset its playback position
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
-  backgroundMusic.pause();
-  backgroundMusic.currentTime = 0;
-  backgroundMusic2.pause();
-  backgroundMusic2.currentTime = 0;
+  assets.backgroundMusic.pause();
+  assets.backgroundMusic.currentTime = 0;
+  assets.backgroundMusic2.pause();
+  assets.backgroundMusic2.currentTime = 0;
 
   // Get the player's name from the input field
   // Reference: https://www.w3schools.com/jsref/prop_text_value.asp
@@ -617,80 +589,79 @@ function endGame() {
 
 // Function to reset the game state and prepare for a new game
 function resetGame() {
-    // Reset the gunner's position to the left edge of the canvas and center vertically
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage
-    gunner.x = 80;
-    gunner.y = canvas.height / 2;
+  // Reset the gunner's position to the left edge of the canvas and center vertically
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Basic_usage
+  gunner.x = 80;
+  gunner.y = canvas.height / 2;
 
-    // Reset the gunner's health to 100%
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
-    gunner.health = 100;
-    healthElement.textContent = `Health: ${gunner.health}%`;
+  // Reset the gunner's health to 100%
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
+  gunner.health = 100;
+  healthElement.textContent = `Health: ${gunner.health}%`;
 
-    // Clear the arrays storing bullets and targets
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length
-    bullets.length = 0;
-    targets.length = 0;
-    enemyBullets.length = 0;
+  // Clear the arrays storing bullets and targets
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length
+  bullets.length = 0;
+  targets.length = 0;
+  enemyBullets.length = 0;
 
-    // Reset the remaining time, pause state, and game over state
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
-    remainingTime = 120;
-    isPaused = false;
-    isGameOver = false;
+  // Reset the remaining time, pause state, and game over state
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+  remainingTime = 120;
+  isPaused = false;
+  isGameOver = false;
 
-    // Reset the pause button text to "Pause"
-    pauseButton.textContent = "Pause";
+  // Reset the pause button text to "Pause"
+  pauseButton.textContent = "Pause";
 
-    // Reset the player's score to 0 and update the score display
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
-    score = 0;
-    scoreElement.textContent = `Score: ${score}`;
+  // Reset the player's score to 0 and update the score display
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/textContent
+  score = 0;
+  scoreElement.textContent = `Score: ${score}`;
 
-    // Clear any existing intervals for the game and shooting
-    clearInterval(gameInterval);
-    clearInterval(shootingInterval);
+  // Clear any existing intervals for the game and shooting
+  clearInterval(gameInterval);
+  clearInterval(shootingInterval);
 
-    // Reset the game's start time
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
-    startTime = new Date().getTime();
+  // Reset the game's start time
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime
+  startTime = new Date().getTime();
 
-    // Clear the canvas
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
-    clearCanvas();
+  // Clear the canvas
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
+  clearCanvas();
 
-    // Enable the start, pause, and end buttons
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/disabled
-    startButton.disabled = false;
-    pauseButton.disabled = false;
-    endButton.disabled = false;
+  // Enable the start, pause, and end buttons
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLButtonElement/disabled
+  startButton.disabled = false;
+  pauseButton.disabled = false;
+  endButton.disabled = false;
 
-    // Reset the player name input and display elements
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
-    const playerNameInput = document.querySelector(".player-name");
-    const playerNameDisplay = document.querySelector(".player-name-display");
-    playerNameInput.style.display = "inline";
-    playerNameInput.value = "";
-    playerNameDisplay.style.display = "none";
-    playerNameDisplay.textContent = "";
+  // Reset the player name input and display elements
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style
+  const playerNameInput = document.querySelector(".player-name");
+  const playerNameDisplay = document.querySelector(".player-name-display");
+  playerNameInput.style.display = "inline";
+  playerNameInput.value = "";
+  playerNameDisplay.style.display = "none";
+  playerNameDisplay.textContent = "";
 
-    // Pause and reset the background music
-    // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
-    backgroundMusic.pause();
-    backgroundMusic.currentTime = 0;
-    backgroundMusic2.pause();
-    backgroundMusic2.currentTime = 0;
+  // Pause and reset the background music
+  // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/pause
+  assets.backgroundMusic.pause();
+  assets.backgroundMusic.currentTime = 0;
+  assets.backgroundMusic2.pause();
+  assets.backgroundMusic2.currentTime = 0;
 
-    // Ensure any other intervals are cleared
-    let id = window.setTimeout(function () {}, 0);
-    while (id--) {
-        window.clearTimeout(id); // will do nothing if no timeout with id is present
-    }
+  // Ensure any other intervals are cleared
+  let id = window.setTimeout(function () {}, 0);
+  while (id--) {
+    window.clearTimeout(id); // will do nothing if no timeout with id is present
+  }
 
-    // Clear isGunshotPlaying flag
-    isGunshotPlaying = false;
+  // Clear isGunshotPlaying flag
+  isGunshotPlaying = false;
 }
-
 
 // Event listener to handle keyboard keydown events
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event
@@ -773,6 +744,7 @@ shootButton.addEventListener(
 );
 
 // Event listeners for touch controls on buttons (touchend)
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
 upButton.addEventListener(
   "touchend",
   () => {
@@ -881,7 +853,6 @@ document.addEventListener(
   { passive: false }
 );
 
-
 // Function to draw a death message on the canvas
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
 function drawDeathMessage() {
@@ -906,8 +877,8 @@ function shoot() {
     if (!isGunshotPlaying) {
       // Reset audio to the beginning and play it
       // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/currentTime
-      gunshotAudio.currentTime = 0;
-      gunshotAudio.play().catch((error) => {
+      assets.gunshotAudio.currentTime = 0;
+      assets.gunshotAudio.play().catch((error) => {
         console.error("Gunshot audio play failed:", error);
       });
       isGunshotPlaying = true;
@@ -927,7 +898,7 @@ function shoot() {
   } else {
     // Stop the gunshot audio if the player is not shooting
     isGunshotPlaying = false;
-    gunshotAudio.pause();
+    assets.gunshotAudio.pause();
   }
 }
 
@@ -952,9 +923,8 @@ function shootTargetBullet(target) {
 
   // Play the target's gunshot audio
   // Reference: https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
-  const targetGunshotAudio = document.querySelector(".target-gunshot-audio");
-  targetGunshotAudio.currentTime = 0;
-  targetGunshotAudio.play().catch((error) => {
+  assets.targetGunshotAudio.currentTime = 0;
+  assets.targetGunshotAudio.play().catch((error) => {
     console.error("Target gunshot audio play failed:", error);
   });
 }
@@ -1008,6 +978,7 @@ setInterval(shoot, 100);
 
 // Start the game loop
 gameLoop();
+
 
 
 
