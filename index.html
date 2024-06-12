@@ -22,9 +22,7 @@
       <h1 class="logo">Isolation</h1>
       <nav>
         <ul>
-          <li><a href="#home">Home</a></li>
           <li><a href="#player-stats">Game</a></li>
-          <li><a href="#instructions">Instructions</a></li>
         </ul>
       </nav>
     </header>
@@ -34,7 +32,7 @@
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4">
         <div class="feature">
-          <h3><i class="fas fa-cogs d-none d-sm-block"></i> Mission Log <span class="badge badge-success">NEW!</span></h3>
+          <h3><i class="fas fa-tasks d-none d-sm-block"></i> Mission Log</h3>
           <p>
             Situation report, soldier. You are the last surviving member of your
             squad, the vanguard unit that was tragically wiped out in enemy
@@ -47,7 +45,7 @@
 
       <div class="col-12 col-md-6 col-lg-4">
         <div class="feature">
-          <h3><i class="far fa-chart-bar d-none d-sm-block"></i> How to Play</h3>
+          <h3><i class="fas fa-book-open d-none d-sm-block"></i> How to Play</h3>
           <p>
             Welcome, soldier! Your mission is to eliminate all hostile forces within
             a limited timeframe of 2 minutes. Use the following controls to navigate
@@ -68,7 +66,7 @@
       
       <div class="col-12 col-md-6 col-lg-4">
         <div class="feature">
-          <h3><i class="fas fa-history d-none d-sm-block"></i> Game Tips</h3>
+          <h3><i class="fas fa-lightbulb d-none d-sm-block"></i> Game Tips</h3>
           <p>
             Your health is represented as a percentage at the top. Eliminate enemies
             and avoid their attacks to stay alive.
@@ -104,23 +102,23 @@
     <div id="player-stats" class="player-stats">
       <input type="text" class="player-name" placeholder="Enter your name" required />
       <span class="player-name-display"></span>
-      <button class="start-button" onclick="startGame()">Start</button>
-      <button class="pause-button" onclick="pauseGame()" title="Pause Game">Pause</button>
-      <button class="reset-button" onclick="resetGame()">Reset Game</button>
-      <button class="end-button" onclick="endGame()">End Game</button>
+      <button class="start-button" onclick="startGame()"><i class="fas fa-play"></i> Start</button>
+      <button class="pause-button" onclick="pauseGame()" title="Pause Game"><i class="fas fa-pause"></i> Pause</button>
+      <button class="reset-button" onclick="resetGame()"><i class="fas fa-redo"></i> Reset Game</button>
+      <button class="end-button" onclick="endGame()"><i class="fas fa-stop"></i> End Game</button>      
     </div>
     <div id="player-hud" class="player-stats-hud">
-      <p class="timer">Time left: 02:00</p>
-      <p class="health">Health: 100%</p>
-      <p class="score">Score: 0</p>
+      <p class="timer"><i class="fas fa-clock"></i> Time left: 02:00</p>
+      <p class="health"><i class="fas fa-heart"></i> Health: 100%</p>
+      <p class="score"><i class="fas fa-star"></i> Score: 0</p>      
     </div>  
     <!-- Game controller buttons -->
     <div class="game-controller">
-      <button class="up-button dpad-button">↑ W</button>
-      <button class="left-button dpad-button">← A</button>
-      <button class="right-button dpad-button">→ D</button>
-      <button class="down-button dpad-button">↓ S</button>
-      <button class="shoot-button game-button">Shoot (Space)</button>
+      <button class="up-button dpad-button"><i class="fas fa-arrow-up"></i> W</button>
+      <button class="left-button dpad-button"><i class="fas fa-arrow-left"></i> A</button>
+      <button class="right-button dpad-button"><i class="fas fa-arrow-right"></i> D</button>
+      <button class="down-button dpad-button"><i class="fas fa-arrow-down"></i> S</button>
+      <button class="shoot-button game-button"><i class="fas fa-crosshairs"></i> Shoot (Space)</button>      
     </div>
   </div>
   
