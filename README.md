@@ -2,17 +2,19 @@
 
 Welcome to the Isolation Jetfighter Shooter website, where you can immerse yourself in an action-packed 2D JavaScript game. Take control of a fighter jet, eliminate hostile forces, and strive for victory in intense aerial battles.
 
+![Website](./assets/images/Website-responsive.png)
+
 ## Table of Contents
 
 - [Isolation - Jetfighter Shooter Website](#isolation---jetfighter-shooter-website)
-[![Header Logo](./assets/images/header-logo.jpg)]
+![Header Logo](./assets/images/header-logo.jpg)
   - [Table of Contents](#table-of-contents)
   - [Mission Log](#mission-log)
- [![Mission Log](./assets/images/mission-log.jpg)]
+ [![Mission Log](./assets/images/Mission-log.png)]
   - [How to Play](#how-to-play)
- [![How to play](./assets/images/how-to-play.jpg)]
+ [![How to play](./assets/images/how-to-play.png)]
     - [Game Controls](#game-controls)
-    [![Game Controls](./assets/images/game-controls.jpg)]
+    [![Game Controls](./assets/images/game-controls.png)]
     - [Health and Survival](#health-and-survival)
     - [Mobile and Tablet Controls](#mobile-and-tablet-controls)
   - [Game Instructions](#game-instructions)
@@ -20,7 +22,7 @@ Welcome to the Isolation Jetfighter Shooter website, where you can immerse yours
   [![Game Canvas](./assets/images/game-canvas.jpg)]
   - [Game Elements](#game-elements)
   - [Player Stats and Game Controls](#player-stats-and-game-controls)
-  [![Player Stats](./assets/images/player-stats.jpg)]
+  [![Player Stats](./assets/images/player-stats.png)]
   - [JavaScript Functionality](#javascript-functionality)
     - [Bugs](#bugs)
     - [Bugfixes](#bugfixes)
@@ -109,10 +111,6 @@ On tablet and mobile devices, you can control the game using on-screen buttons:
 
 Good luck, and may victory be yours!
 
-## Game Instructions
-
-For a quick reference, you can show or hide the game instructions with the "Show Instructions" button.
-
 ## Canvas for the Game
 
 The game is rendered within a canvas element with a width of 800 pixels and a height of 600 pixels.
@@ -148,11 +146,11 @@ The game functionality is powered by JavaScript, which is included in the `scrip
 - Player input name would not display after the user enters their name.
 - When the player dies, the shooting sound keeps on playing.
 
-### Bugfixes
+### Bugfixes / Resubmission update
 
 While several issues within the game remain, I have documented the code for readability and future improvements, ensuring that other developers can review the code and potentially find solutions.
 
-#### Efforts to Address Bugs:
+#### Efforts to Address Bugs
 
 1. **Touch Control Issue:**
    - Difficulty in achieving precise touch control aiming on mobile and tablet devices.
