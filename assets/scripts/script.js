@@ -357,9 +357,8 @@ function update() {
 
   // Check if the game is over and the gunner's health is depleted
   if (isGameOver && gunner.health <= 0) {
-    clearCanvas(); // Clear the canvas for the game over message
-    drawDeathMessage(); // Display the game over message
-    return; // Return early to avoid executing other parts of the function
+    drawDeathMessage("You Died Try Again!"); // Ensure the message is shown
+    return;
   }
 }
 
@@ -438,7 +437,7 @@ function gameLoop() {
   if (!isPaused && !isGameOver) {
     update();
     targets.forEach((target) => {
-      if (Math.random() < 0.01) {
+      if (Math.random() < 0.005) {
         shootTargetBullet(target);
       }
     });
@@ -645,9 +644,9 @@ function endGame() {
 
   // Check if the gunner's health is zero or less
   if (gunner.health <= 0) {
-    // Clear the canvas and draw the death message
-    clearCanvas();
-    drawDeathMessage();
+    drawDeathMessage("You Died Try Again!"); // Display the death message
+  } else if (remainingTime <= 0) {
+    drawDeathMessage("You Survived Well Done!"); // Display the survival message
   }
 }
 
@@ -952,12 +951,13 @@ document.addEventListener(
 
 // Function to draw a death message on the canvas
 // Reference: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillText
-function drawDeathMessage() {
+function drawDeathMessage(message) {
   ctx.fillStyle = "red";
   ctx.font = "40px 'Black Ops One', sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("You Died!", canvas.width / 2, canvas.height / 2);
+  ctx.fillText(message, canvas.width / 2, canvas.height / 2);
 }
+
 
 let isGunshotPlaying = false;
 
@@ -1010,7 +1010,7 @@ function shootTargetBullet(target) {
   const bullet = {
     x: target.x,
     y: target.y,
-    speed: 4.5,
+    speed: 2,
     angle: angle,
   };
 
