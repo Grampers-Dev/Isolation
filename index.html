@@ -7,6 +7,10 @@
   <meta name="description" content="Website for playing a Jetfighter shooter." />
   <meta name="keywords" content="2d Java script game, Jetfighter, Air battle" />
   <title>Isolation</title>
+  <!-- Include Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
   <!-- Link to external CSS file -->
   <link rel="stylesheet" type="text/css" href="assets/style.css" />
 </head>
@@ -26,76 +30,90 @@
     </header>
   </div>
 
-  <!-- Mission Log section with game backstory -->
-  <div class="mission-log">
-    <h2>Mission Log</h2>
-    <p>
-      Situation report, soldier. You are the last surviving member of your
-      squad, the vanguard unit that was tragically wiped out in enemy
-      territory. Your mission remains unchanged: eliminate all hostile forces
-      within a limited timeframe of 2 minutes. Your precision and
-      resourcefulness are paramount. May you succeed where others have fallen.
-    </p>
-  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature">
+          <h3><i class="fas fa-cogs d-none d-sm-block"></i> Mission Log <span class="badge badge-success">NEW!</span></h3>
+          <p>
+            Situation report, soldier. You are the last surviving member of your
+            squad, the vanguard unit that was tragically wiped out in enemy
+            territory. Your mission remains unchanged: eliminate all hostile forces
+            within a limited timeframe of 2 minutes. Your precision and
+            resourcefulness are paramount. May you succeed where others have fallen.
+          </p>
+        </div>
+      </div>
 
-  <div id="instructions" class="instructions hidden">
-    <h2>How to Play</h2>
-    <p>
-      Welcome, soldier! Your mission is to eliminate all hostile forces within
-      a limited timeframe of 2 minutes. Use the following controls to navigate
-      and engage the enemy:
-    </p>
-    <div>
-      <!-- List of controls and their descriptions -->
-      <div><strong>W:</strong> Move Up</div>
-      <div><strong>S:</strong> Move Down</div>
-      <div><strong>A:</strong> Move Left</div>
-      <div><strong>D:</strong> Move Right</div>
-      <div><strong>Space Bar:</strong> Fire your weapons</div>
-      <div><strong>Pause Button:</strong> Pause/Resume the game</div>
-      <div><strong>End Button:</strong> End the game</div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature">
+          <h3><i class="far fa-chart-bar d-none d-sm-block"></i> How to Play</h3>
+          <p>
+            Welcome, soldier! Your mission is to eliminate all hostile forces within
+            a limited timeframe of 2 minutes. Use the following controls to navigate
+            and engage the enemy:
+          </p>
+          <div>
+            <!-- List of controls and their descriptions -->
+            <div><strong>W:</strong> Move Up</div>
+            <div><strong>S:</strong> Move Down</div>
+            <div><strong>A:</strong> Move Left</div>
+            <div><strong>D:</strong> Move Right</div>
+            <div><strong>Space Bar:</strong> Fire your weapons</div>
+            <div><strong>Pause Button:</strong> Pause/Resume the game</div>
+            <div><strong>End Button:</strong> End the game</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="feature">
+          <h3><i class="fas fa-history d-none d-sm-block"></i> Game Tips</h3>
+          <p>
+            Your health is represented as a percentage at the top. Eliminate enemies
+            and avoid their attacks to stay alive.
+          </p>
+          <p>
+            On tablet and mobile devices, you can also control the game using the
+            on-screen buttons:
+          </p>
+          <div>
+            <!-- List of touch control buttons and their descriptions -->
+            <div><strong>Up Button:</strong> Move Up</div>
+            <div><strong>Down Button:</strong> Move Down</div>
+            <div><strong>Left Button:</strong> Move Left</div>
+            <div><strong>Right Button:</strong> Move Right</div>
+            <div><strong>Shoot Button:</strong> Fire your weapon</div>
+          </div>
+          <p>Good luck, and may victory be yours!</p>
+        </div>
+      </div>
     </div>
-    <p>
-      Your health is represented as a percentage at the top. Eliminate enemies
-      and avoid their attacks to stay alive.
-    </p>
-    <p>
-      On tablet and mobile devices, you can also control the game using the
-      on-screen buttons:
-    </p>
-    <div>
-      <!-- List of touch control buttons and their descriptions -->
-      <div><strong>Up Button:</strong> Move Up</div>
-      <div><strong>Down Button:</strong> Move Down</div>
-      <div><strong>Left Button:</strong> Move Left</div>
-      <div><strong>Right Button:</strong> Move Right</div>
-      <div><strong>Shoot Button:</strong> Fire your weapon</div>
-    </div>
-    <p>Good luck, and may victory be yours!</p>
   </div>
 
   <!-- Button to show/hide game instructions -->
   <button class="instructions-button">Show Instructions</button>
 
+  <div class="game-container">
+    <!-- Loading bar -->
+    <div id="loading-bar-container" style="display: block;">
+      <div id="loading-bar"> Loading....</div>
+  </div>
+    <!-- Canvas for the game -->
+    <canvas class="game-canvas moving-background" width="800" height="400"></canvas>
     <div id="player-stats" class="player-stats">
       <input type="text" class="player-name" placeholder="Enter your name" required />
       <span class="player-name-display"></span>
-    <button class="start-button" onclick="startGame()">Start</button>
-    <button class="pause-button" onclick="pauseGame()" title="Pause Game">Pause</button>
-    <button class="reset-button" onclick="resetGame()">Reset Game</button>
-    <button class="end-button" onclick="endGame()">End Game</button>
+      <button class="start-button" onclick="startGame()">Start</button>
+      <button class="pause-button" onclick="pauseGame()" title="Pause Game">Pause</button>
+      <button class="reset-button" onclick="resetGame()">Reset Game</button>
+      <button class="end-button" onclick="endGame()">End Game</button>
+    </div>
     <div id="player-hud" class="player-stats-hud">
       <p class="timer">Time left: 02:00</p>
       <p class="health">Health: 100%</p>
       <p class="score">Score: 0</p>
-    </div>
-    </div>
-
-  <!-- Container for the game -->
-  <div class="game-container">
-    <!-- Canvas for the game -->
-    <canvas class="game-canvas moving-background" width="800" height="480"></canvas>
-
+    </div>  
     <!-- Game controller buttons -->
     <div class="game-controller">
       <button class="up-button dpad-button">↑ W</button>
@@ -105,6 +123,7 @@
       <button class="shoot-button game-button">Shoot (Space)</button>
     </div>
   </div>
+  
 
   <!-- Images for the game elements -->
   <img class="fighter-jet" src="assets/images/player-1-jet-fixed.png" alt="Fighter Jet Image" />
@@ -123,7 +142,6 @@
   </audio>
 
   <!-- Include the JavaScript file for game functionality -->
-  
   <script src="assets/scripts/script.js"></script>
   <script src="assets/scripts/form_validate.js"></script>
   <script>
