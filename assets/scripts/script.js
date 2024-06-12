@@ -13,6 +13,9 @@ const pauseButton = document.querySelector(".pause-button");
 const resetButton = document.querySelector(".reset-button");
 const endButton = document.querySelector(".end-button");
 
+const loadingBarContainer = document.getElementById("loading-bar-container");
+const loadingBar = document.getElementById("loading-bar");
+
 // Get the timer, health, and score display elements
 const timerElement = document.querySelector(".timer");
 const healthElement = document.querySelector(".health");
@@ -45,8 +48,9 @@ const totalAssets = 7;
 function checkAllAssetsLoaded() {
   assetsLoaded++;
   if (assetsLoaded === totalAssets) {
-    // Start the game loop only when all images and audio files are loaded
-    startGame();
+    // Hide loading bar and show the start button
+    loadingBarContainer.style.display = "none";
+    startButton.style.display = "inline-block";
   }
 }
 
@@ -509,14 +513,39 @@ endButton.addEventListener("click", () => {
   endGame();
 });
 
-// Function to validate the player name input
+// Add validation for player name and start game loading on start button click
 function validatePlayerName() {
   const playerName = document.querySelector(".player-name").value.trim();
   if (!playerName) {
     alert("Player name cannot be empty!");
   } else {
-    startGame();
+    startGameLoading();
   }
+}
+
+function startGameLoading() {
+  // Show the loading bar container and reset the width of the loading bar
+  loadingBarContainer.style.display = "block";
+  loadingBar.style.width = "0";
+
+  // Hide the start button during the loading process
+  startButton.style.display = "none";
+
+  // Simulate loading process
+  let loadingProgress = 0;
+  const loadingInterval = setInterval(() => {
+    loadingProgress += 10; // Adjust the increment as needed
+    loadingBar.style.width = `${loadingProgress}%`;
+
+    if (loadingProgress >= 100) {
+      clearInterval(loadingInterval);
+      // Hide the loading bar container and show the canvas
+      loadingBarContainer.style.display = "none";
+      canvas.style.display = "block";
+      // Start the game
+      startGame();
+    }
+  }, 100); // Adjust the duration as needed
 }
 
 // Existing startGame function modified to remove inline event handler
