@@ -271,7 +271,7 @@ button:hover {
     align-items: center;
     width: 170px; /* Adjust as needed */
     height: 170px; /* Adjust as needed */
-    margin: auto;
+    margin-bottom: 10px;
 }
 
 .dpad-button {
@@ -473,6 +473,10 @@ div#player-hud {
 /* without this the game does not render, due to time contraint I was not able to fix this issue */
 .instructions-button {
     display: none; /* Hide the button by default */
+}
+
+.game-container {
+    margin-bottom: 20px;
 }
 
 
