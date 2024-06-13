@@ -3,7 +3,7 @@
 
 /* Styling for the game canvas */
 canvas.game-canvas {
-    background-image: url("./images/canvas-background-image-3.webp");
+    background-image: url("../images/canvas-background-image-3.webp");
     margin: 0 auto;
 }
 
@@ -21,7 +21,7 @@ body {
 /* Define a class for elements with a moving background
 Removed the animation to due lagging error */
 .moving-background {
-    background-image: url("assets/images/canvas-background-image-3.webp");
+    background-image: url("../images/canvas-background-image-3.webp");
     background-size: cover;
     background-position: center;
 }
