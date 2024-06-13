@@ -12,7 +12,7 @@ Welcome to the Isolation Jetfighter Shooter website, where you can immerse yours
   - [Mission Log](#mission-log)
  [![Mission Log](./assets/images/Mission-log.png)]
   - [How to Play](#how-to-play)
- [![How to play](./assets/images/how-to-play.png)]
+ [![How to play](./assets/images/How-to-play.png)]
     - [Game Controls](#game-controls)
     [![Game Controls](./assets/images/game-controls.png)]
     - [Health and Survival](#health-and-survival)
